@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import ICommandType from './ICommandType';
 import IUserCommand from './IUserCommand';
 
-interface CommandCheck {
+interface ICommandCheck {
     userCommand: IUserCommand;
     commandType: ICommandType;
 }
@@ -28,7 +28,7 @@ export function unregisterCommand(commandTrigger: string): void {
     }
 }
 
-function checkForCommand(rawMessage: string): CommandCheck {
+function checkForCommand(rawMessage: string): ICommandCheck {
     if (rawMessage == null || rawMessage.length < 1) {
         return null;
     }
@@ -39,7 +39,7 @@ function checkForCommand(rawMessage: string): CommandCheck {
     // get first token to test as a command trigger
     const trigger = tokens[0];
 
-    //find matching command type
+    // find matching command type
     const commandType = registeredCommandTypes.find(
         ct => (ct.ignoreCase && trigger.toLowerCase() === ct.trigger.toLowerCase()) || trigger === ct.trigger
     );
