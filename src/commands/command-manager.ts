@@ -39,6 +39,7 @@ function checkForCommand(rawMessage: string): CommandCheck {
     // get first token to test as a command trigger
     const trigger = tokens[0];
 
+    //find matching command type
     const commandType = registeredCommandTypes.find(
         ct => (ct.ignoreCase && trigger.toLowerCase() === ct.trigger.toLowerCase()) || trigger === ct.trigger
     );
