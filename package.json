@@ -12,11 +12,15 @@
   "devDependencies": {
     "@types/moment": "^2.13.0",
     "@types/node": "^13.7.6",
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "eslint": "^6.8.0",
     "typescript": "^3.8.2"
   },
   "scripts": {
     "start": "tsc && node dist/app.js",
     "build": "tsc",
+    "lint": "eslint . --ext .js,.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ebiggz",

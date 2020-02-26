@@ -6,7 +6,7 @@ const discordClient = new Client();
 /**
  * Logs into the discord server and starts listening for messages.
  */
-export function init() {
+export function init(): void {
 
     discordClient.on('ready', () => {
         console.log(`Logged in as ${discordClient.user.tag}!`);

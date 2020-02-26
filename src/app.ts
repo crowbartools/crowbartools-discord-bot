@@ -5,7 +5,7 @@ import PingCommandType from './commands/types/ping';
 import v5UpdatesCommandType from './commands/types/v5Updates';
 
 function verifyEnvironment(): boolean {
-    let envResult = dotenv.config();
+    const envResult = dotenv.config();
 
     if(envResult.error) {
         console.error("Could not find a .env file in root folder of repo. Contact ebiggz to get a copy.");
@@ -20,7 +20,7 @@ function verifyEnvironment(): boolean {
     return true;
 }
 
-function start() {
+function start(): void {
     // verify environment config is setup properly
     if(!verifyEnvironment()) {
         process.exit();

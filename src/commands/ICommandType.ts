@@ -1,8 +1,8 @@
-import { Message } from 'discord.js';
-import IUserCommand from './IUserCommand';
+import { Message } from "discord.js";
+import IUserCommand from "./IUserCommand";
 
 export default interface ICommandType {
-    trigger: string,
+    trigger: string;
     description: string;
     deleteTrigger: boolean;
     ignoreCase: boolean;

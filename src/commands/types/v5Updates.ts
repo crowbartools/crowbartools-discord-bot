@@ -4,6 +4,18 @@ import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';
 import { RichEmbed } from 'discord.js';
 
+interface IGitHubCommitData {
+	commit: {
+		message: string;
+		committer: {
+			date: string;
+		};
+	};
+	author: {
+		login: string;
+	};
+}
+
 const command: ICommandType = { 
 	trigger: '!v5updates',
 	description: 'List recent v5 commit messages.',
@@ -11,8 +23,8 @@ const command: ICommandType = {
 	deleteTrigger: false,
 	async execute(message) {
 
-		let sinceDate = moment().subtract('month', 1).format();
-		let v5CommitsUrl = `https://api.github.com/repos/crowbartools/Firebot/commits?sha=v5&since=${sinceDate}`;
+		const sinceDate = moment().subtract('month', 1).format();
+		const v5CommitsUrl = `https://api.github.com/repos/crowbartools/Firebot/commits?sha=v5&since=${sinceDate}`;
 
 		let response: AxiosResponse;
 		try {
@@ -32,8 +44,8 @@ const command: ICommandType = {
 			return;
 		}
 
-		let commits: IGitHubCommitData[] = response.data;
-		let commitMessages = commits
+		const commits: IGitHubCommitData[] = response.data;
+		const commitMessages = commits
 			.slice(0, 10)
 			.map(c => {
 				return { 
@@ -51,7 +63,7 @@ const command: ICommandType = {
 				"https://github.com/crowbartools/Firebot/commits/v5"
 			);
 
-		for(let cm of commitMessages) {
+		for(const cm of commitMessages) {
 			embed.addField(cm.message, `*${cm.name}* (${cm.date})`);
 		}
 
@@ -59,17 +71,5 @@ const command: ICommandType = {
 		message.channel.send(embed);
 	},
 };
-
-interface IGitHubCommitData {
-	commit: {
-		message: string;
-		committer: {
-			date: string
-		}
-	},
-	author: {
-		login: string;
-	}
-}
 
 export default command;
