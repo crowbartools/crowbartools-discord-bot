@@ -58,7 +58,7 @@ const command: ICommandType = {
             .setAuthor(
                 'Recent V5 Commits',
                 'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
-                'https://github.com/crowbartools/Firebot/commits/v5',
+                'https://github.com/crowbartools/Firebot/commits/v5'
             );
 
         for (const cm of commitMessages) {

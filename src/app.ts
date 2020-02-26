@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import * as bot from './bot';
-import * as commandManager from './commands/command-manager';
+import { registerCommand } from './commands/command-manager';
 import PingCommandType from './commands/types/ping';
 import v5UpdatesCommandType from './commands/types/v5Updates';
 
@@ -27,8 +27,8 @@ function start(): void {
     }
 
     // register our command types
-    commandManager.registerCommand(PingCommandType);
-    commandManager.registerCommand(v5UpdatesCommandType);
+    registerCommand(PingCommandType);
+    registerCommand(v5UpdatesCommandType);
 
     // connect to discord
     bot.init();

@@ -1,5 +1,5 @@
 import { Client } from 'discord.js';
-import * as commandManager from './commands/command-manager';
+import { handleMessage } from './commands/command-manager';
 
 const discordClient = new Client();
 
@@ -15,7 +15,7 @@ export function init(): void {
         // ignore messages from bots
         if (message.author.bot) return;
 
-        commandManager.handleMessage(message);
+        handleMessage(message);
     });
 
     discordClient.login(process.env.DISCORD_TOKEN);

@@ -2,8 +2,6 @@ import { Message } from 'discord.js';
 import ICommandType from './ICommandType';
 import IUserCommand from './IUserCommand';
 
-import { escapeRegExp } from '../util';
-
 interface CommandCheck {
     userCommand: IUserCommand;
     commandType: ICommandType;
@@ -11,24 +9,11 @@ interface CommandCheck {
 
 const registeredCommandTypes: ICommandType[] = [];
 
-function buildUserCommand(trigger: string, rawMessage: string): IUserCommand {
-    const regex = new RegExp(escapeRegExp(trigger), 'i');
-
-    const strippedTriggerMsg = rawMessage.replace(regex, '').trim();
-
-    const args = strippedTriggerMsg.split(' ');
-
-    return {
-        trigger,
-        args,
-    };
-}
-
 export function registerCommand(commandType: ICommandType): void {
     if (commandType == null) return;
 
     const commandTypeExists = registeredCommandTypes.some(
-        c => c.trigger.toLowerCase() === commandType.trigger.toLowerCase(),
+        c => c.trigger.toLowerCase() === commandType.trigger.toLowerCase()
     );
 
     if (!commandTypeExists) {
@@ -43,28 +28,29 @@ export function unregisterCommand(commandTrigger: string): void {
     }
 }
 
-export function checkForCommand(rawMessage: string): CommandCheck {
+function checkForCommand(rawMessage: string): CommandCheck {
     if (rawMessage == null || rawMessage.length < 1) {
-        // bad argument
         return null;
     }
 
-    for (const commandType of registeredCommandTypes) {
-        let foundMatch = false;
-        if (commandType.ignoreCase) {
-            foundMatch = rawMessage.toLowerCase().startsWith(commandType.trigger.toLowerCase());
-        } else {
-            foundMatch = rawMessage.startsWith(commandType.trigger);
-        }
+    // trim whitespace, then split message by space
+    const tokens = rawMessage.trim().split(' ');
 
-        if (foundMatch) {
-            const userCommand = buildUserCommand(commandType.trigger, rawMessage);
+    // get first token to test as a command trigger
+    const trigger = tokens[0];
 
-            return {
-                userCommand,
-                commandType,
-            };
-        }
+    const commandType = registeredCommandTypes.find(
+        ct => (ct.ignoreCase && trigger.toLowerCase() === ct.trigger.toLowerCase()) || trigger === ct.trigger
+    );
+
+    if (commandType != null) {
+        return {
+            commandType,
+            userCommand: {
+                trigger,
+                args: tokens.splice(1),
+            },
+        };
     }
 
     return null;
