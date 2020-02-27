@@ -1,8 +1,12 @@
-import { RichEmbed } from 'discord.js';
 import { ICommandType } from '../../models/command';
-import { issueHelpEmbed, buildIssueEmbed, getDefaultProjectName, getProject } from '../../helpers/github-helpers';
+import {
+    issueHelpEmbed,
+    buildIssueEmbed,
+    buildIssueSearchEmbed,
+    getDefaultProjectName,
+    getProject,
+} from '../../helpers/github-helpers';
 import { getIssue, searchIssues } from '../../services/github-service';
-import { limitString } from '../../../common/util';
 
 const command: ICommandType = {
     triggers: ['!issue', '!i'],
@@ -10,11 +14,14 @@ const command: ICommandType = {
     deleteTrigger: false,
     async execute(message, userCommand) {
         const args = userCommand.args;
+
+        // help command
         if (args.length === 0 || (args.length === 1 && (args[0].toLowerCase() === 'help' || args[0] === '?'))) {
             message.channel.send(issueHelpEmbed);
             return;
         }
 
+        // issue search
         if (args[0].toLowerCase() === 'search') {
             if (args.length === 1) {
                 message.channel.send('Please provide a search query.');
@@ -42,40 +49,11 @@ const command: ICommandType = {
                 return;
             }
 
-            const issueFields = issues.slice(0, 5).map(i => {
-                return {
-                    name: `#${i.number}`,
-                    value: limitString(i.title, 250, '...'),
-                    url: i.html_url,
-                };
-            });
-
-            const embed = new RichEmbed().setColor(0x00a4cf).setTitle('Issue Search');
-
-            if (project.name === 'elixr') {
-                embed.setAuthor(
-                    'MixrElixr',
-                    'https://raw.githubusercontent.com/crowbartools/MixrElixr/dev/src/resources/images/elixr-light-128.png',
-                    'https://github.com/crowbartools/MixrElixr/'
-                );
-            } else {
-                embed.setAuthor(
-                    'Firebot',
-                    'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
-                    'https://github.com/crowbartools/Firebot/'
-                );
-            }
-
-            for (const issueField of issueFields) {
-                const issueLink = `[${issueField.value}](${issueField.url})`;
-                embed.addField(issueField.name, issueLink);
-            }
-
-            message.channel.send(embed);
+            message.channel.send(buildIssueSearchEmbed(issues));
             return;
         }
 
-        // assume single issue lookup
+        // single issue lookup
 
         let projectName = getDefaultProjectName(message);
         if (['firebot', 'elixr'].includes(args[0].toLowerCase())) {
@@ -92,9 +70,11 @@ const command: ICommandType = {
                 return;
             }
             message.channel.send(buildIssueEmbed(issue, project.name, true));
-        } else {
-            message.channel.send('Not a valid Issue command. Use **!issue help** for help.');
+            return;
         }
+
+        // unrecongized command
+        message.channel.send('Not a valid Issue command. Use **!issue help** for help.');
     },
 };
 

@@ -1,6 +1,14 @@
 import { RichEmbed, Message } from 'discord.js';
 import { IIssue } from '../models/github';
 import { DiscordChannels } from './crowbar-helpers';
+import { limitString } from '../../common/util';
+
+const firebotLogoUrl = 'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png';
+const firebotRepoUrl = 'https://github.com/crowbartools/Firebot/';
+const elixrLogoUrl =
+    'https://raw.githubusercontent.com/crowbartools/MixrElixr/dev/src/resources/images/elixr-light-128.png';
+const elixrRepoUrl = 'https://github.com/crowbartools/MixrElixr/';
+const crowbarLogoUrl = 'https://crowbartools.com/user-content/emotes/global/crowbar.png';
 
 export interface IProject {
     name: string;
@@ -56,7 +64,7 @@ export function getDefaultProjectName(message: Message): string {
 
 export const issueCreateHelpEmbed = new RichEmbed()
     .setColor(0x00a4cf)
-    .setAuthor('Create Issue Help', 'https://crowbartools.com/user-content/emotes/global/crowbar.png')
+    .setAuthor('Create Issue Help', crowbarLogoUrl)
     .addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]')
     .addField('Exampe 2 *(Title & Description)*:', '!createissue [type] t:[title] d:[description]')
     .addField(
@@ -72,7 +80,7 @@ export const issueCreateHelpEmbed = new RichEmbed()
 
 export const issueHelpEmbed = new RichEmbed()
     .setColor(0x00a4cf)
-    .setAuthor('Issue Help', 'https://crowbartools.com/user-content/emotes/global/crowbar.png')
+    .setAuthor('Issue Help', crowbarLogoUrl)
     .addField('Search for an open issue:', '!issue search [query]')
     .addField('Search in specified project:', '!issue search [project] [query]')
     .addField('Lookup specfic issue:', '!issue [issue#]')
@@ -83,6 +91,31 @@ export const issueHelpEmbed = new RichEmbed()
         '\u200B',
         "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
     );
+
+export function buildIssueSearchEmbed(issues: IIssue[], projectName = 'firebot'): RichEmbed {
+    const issueFields = issues.slice(0, 5).map(i => {
+        return {
+            name: `#${i.number}`,
+            value: limitString(i.title, 250, '...'),
+            url: i.html_url,
+        };
+    });
+
+    const embed = new RichEmbed().setColor(0x00a4cf).setTitle('Issue Search');
+
+    if (projectName === 'elixr') {
+        embed.setAuthor('MixrElixr', elixrLogoUrl, elixrRepoUrl);
+    } else {
+        embed.setAuthor('Firebot', firebotLogoUrl, firebotRepoUrl);
+    }
+
+    for (const issueField of issueFields) {
+        const issueLink = `[${issueField.value}](${issueField.url})`;
+        embed.addField(issueField.name, issueLink);
+    }
+
+    return embed;
+}
 
 export const creatingIssuePlaceholderEmbed = new RichEmbed()
     .setColor(8947848)
@@ -96,17 +129,9 @@ export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showStat
     const embed = new RichEmbed().setColor(0x00a4cf);
 
     if (projectName === 'elixr') {
-        embed.setAuthor(
-            'MixrElixr',
-            'https://raw.githubusercontent.com/crowbartools/MixrElixr/dev/src/resources/images/elixr-light-128.png',
-            'https://github.com/crowbartools/MixrElixr/'
-        );
+        embed.setAuthor('MixrElixr', elixrLogoUrl, elixrRepoUrl);
     } else {
-        embed.setAuthor(
-            'Firebot',
-            'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
-            'https://github.com/crowbartools/Firebot/'
-        );
+        embed.setAuthor('Firebot', firebotLogoUrl, firebotRepoUrl);
     }
 
     // set footer if user isnt crowbartools robot
