@@ -13,6 +13,7 @@ import { Message } from 'discord.js';
 
 const cooldownCache = new NodeCache({ stdTTL: 15, checkperiod: 15 });
 
+//#region helpers
 enum CommandFlag {
     Title,
     Description,
@@ -47,6 +48,7 @@ function getIssueType(issueTypeName: string): IIssueType {
             return null;
     }
 }
+//#endregion
 
 const command: ICommandType = {
     triggers: ['!createissue', '!ci'],

@@ -1,5 +1,6 @@
 import { RichEmbed, Message } from 'discord.js';
-import { IIssue } from '../models/github';
+import moment from 'moment';
+import { IIssue, ICommitData } from '../models/github';
 import { DiscordChannels } from './crowbar-helpers';
 import { limitString } from '../../common/util';
 
@@ -10,6 +11,7 @@ const elixrLogoUrl =
 const elixrRepoUrl = 'https://github.com/crowbartools/MixrElixr/';
 const crowbarLogoUrl = 'https://crowbartools.com/user-content/emotes/global/crowbar.png';
 
+//#region project helpers
 export interface IProject {
     name: string;
     repo: string;
@@ -61,7 +63,9 @@ export function getDefaultProjectName(message: Message): string {
     }
     return projectName || ProjectName.Firebot;
 }
+//#endregion
 
+//#region rich embeds
 export const issueCreateHelpEmbed = new RichEmbed()
     .setColor(0x00a4cf)
     .setAuthor('Create Issue Help', crowbarLogoUrl)
@@ -163,3 +167,24 @@ export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showExpa
 
     return embed;
 }
+
+export function buildRecentCommitsEmbed(commits: ICommitData[]): RichEmbed {
+    const commitMessages = commits.slice(0, 10).map(c => {
+        return {
+            message: c.commit.message,
+            name: c.author.login,
+            date: moment(c.commit.committer.date).format('h:mm A MM/DD/YYYY'),
+        };
+    });
+
+    const embed = new RichEmbed()
+        .setColor(0x00a4cf)
+        .setAuthor('Recent V5 Commits', firebotLogoUrl, `${firebotRepoUrl}commits/v5`);
+
+    for (const cm of commitMessages) {
+        embed.addField(cm.message, `*${cm.name}* (${cm.date})`);
+    }
+
+    return embed;
+}
+//#endregion
