@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
-import * as bot from './bot';
+import * as bot from './bot/commands/bot';
 
-import { registerCommand } from './commands/command-manager';
-import PingCommand from './commands/types/ping';
-import v5UpdatesCommand from './commands/types/v5Updates';
-import CreateGHIssueCommand from './commands/types/createGithubIssue';
+import { registerCommand } from './bot/commands/command-manager';
+import PingCommand from './bot/commands/types/ping';
+import v5UpdatesCommand from './bot/commands/types/v5Updates';
+import CreateGHIssueCommand from './bot/commands/types/createGithubIssue';
 
 function verifyEnvironment(): boolean {
     const envResult = dotenv.config();

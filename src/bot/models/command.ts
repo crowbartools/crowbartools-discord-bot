@@ -1,10 +1,14 @@
 import { Message } from 'discord.js';
-import IUserCommand from './IUserCommand';
 
-export default interface ICommandType {
+export interface ICommandType {
     trigger: string;
     description: string;
     deleteTrigger: boolean;
     ignoreCase: boolean;
     execute(message: Message, userCommand: IUserCommand): void;
+}
+
+export interface IUserCommand {
+    trigger: string;
+    args: string[];
 }

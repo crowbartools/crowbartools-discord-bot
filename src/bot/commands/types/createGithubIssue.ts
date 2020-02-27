@@ -1,4 +1,4 @@
-import ICommandType from '../ICommandType';
+import { ICommandType } from '../../models/command';
 import { RichEmbed } from 'discord.js';
 import { IIssue } from '../../models/github';
 import axios, { AxiosResponse } from 'axios';

@@ -1,5 +1,5 @@
 import { Client } from 'discord.js';
-import { handleMessage } from './commands/command-manager';
+import { handleMessage } from './command-manager';
 
 const discordClient = new Client();
 

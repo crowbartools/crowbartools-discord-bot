@@ -1,4 +1,4 @@
-import ICommandType from '../ICommandType';
+import { ICommandType } from '../../models/command';
 
 const command: ICommandType = {
     trigger: '!ping',

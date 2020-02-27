@@ -1,4 +1,4 @@
-import ICommandType from '../ICommandType';
+import { ICommandType } from '../../models/command';
 
 import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';

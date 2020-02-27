@@ -1,6 +1,5 @@
 import { Message } from 'discord.js';
-import ICommandType from './ICommandType';
-import IUserCommand from './IUserCommand';
+import { ICommandType, IUserCommand } from '../models/command';
 
 interface ICommandCheck {
     userCommand: IUserCommand;
