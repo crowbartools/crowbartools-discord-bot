@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { ICreateIssueRequest, IIssue, ICommitData, IGetCommitsRequest } from '../models/github';
+import { IGetCommitsRequest, ICreateIssueRequest, IIssue, ICommitData, ISearchResult } from '../models/github';
 
 function getDefaultAxiosConfig(): AxiosRequestConfig {
     return {
@@ -49,15 +49,15 @@ export async function searchIssues(repo: string, search: string): Promise<IIssue
 
     const searchUrl = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}`;
 
-    let response: AxiosResponse<IIssue[]>;
+    let response: AxiosResponse<ISearchResult>;
     try {
-        response = await axios.get<IIssue[]>(searchUrl, getDefaultAxiosConfig());
+        response = await axios.get<ISearchResult>(searchUrl, getDefaultAxiosConfig());
     } catch (error) {
         console.log('Error searching github issues', error);
     }
 
     if (response && response.status === 200) {
-        return response.data;
+        return response.data.items;
     }
 
     return null;

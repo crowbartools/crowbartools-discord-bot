@@ -35,3 +35,9 @@ export interface ICommitData {
         login: string;
     };
 }
+
+export interface ISearchResult {
+    total_count: number;
+    incomplete_results: boolean;
+    items: IIssue[];
+}
