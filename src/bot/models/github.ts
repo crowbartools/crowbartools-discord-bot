@@ -5,6 +5,12 @@ export interface ICreateIssueRequest {
     labels: string[];
 }
 
+export interface IGetCommitsRequest {
+    repo: string;
+    branch: string;
+    sinceDateString: string;
+}
+
 export interface IIssue {
     number: number;
     title: string;

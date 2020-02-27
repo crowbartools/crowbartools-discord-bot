@@ -1,9 +1,7 @@
-import { ICommandType } from '../../models/command';
-
 import moment from 'moment';
-import axios, { AxiosResponse } from 'axios';
 import { RichEmbed } from 'discord.js';
-import { ICommitData } from '../../models/github';
+import { ICommandType } from '../../models/command';
+import { getRecentCommits } from '../../services/github-service';
 
 const command: ICommandType = {
     triggers: ['!v5updates'],
@@ -13,26 +11,18 @@ const command: ICommandType = {
         const sinceDate = moment()
             .subtract('month', 1)
             .format();
-        const v5CommitsUrl = `https://api.github.com/repos/crowbartools/Firebot/commits?sha=v5&since=${sinceDate}`;
 
-        let response: AxiosResponse<ICommitData[]>;
-        try {
-            response = await axios.get<ICommitData[]>(v5CommitsUrl, {
-                headers: {
-                    'User-Agent': 'ebiggz/CrowbarToolsDiscordBot',
-                },
-            });
-        } catch (error) {
-            console.log('Error getting recent v5 commit messages', error);
-            return;
-        }
+        const commits = await getRecentCommits({
+            repo: 'crowbartools/Firebot',
+            branch: 'v5',
+            sinceDateString: sinceDate,
+        });
 
-        if (response.status !== 200) {
+        if (commits == null) {
             console.log('Failed to get recent v5 commit messages');
             return;
         }
 
-        const commits = response.data;
         const commitMessages = commits.slice(0, 10).map(c => {
             return {
                 message: c.commit.message,
