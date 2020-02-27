@@ -33,14 +33,23 @@ function getIssueType(issueTypeName: string): IIssueType {
     }
 }
 
-function buildIssueEmbed(issue: IIssue): RichEmbed {
-    const embed = new RichEmbed()
-        .setColor(0x00a4cf)
-        .setAuthor(issue.user.login, issue.user.avatar_url, `https://github.com/${issue.user.login}`);
+function buildIssueEmbed(issue: IIssue, firebotAuthor = false): RichEmbed {
+    const embed = new RichEmbed().setColor(0x00a4cf);
+
+    if (!firebotAuthor) {
+        embed.setAuthor(issue.user.login, issue.user.avatar_url, `https://github.com/${issue.user.login}`);
+    } else {
+        embed.setAuthor(
+            'Firebot',
+            'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
+            'https://github.com/crowbartools/Firebot/'
+        );
+    }
 
     embed.setTitle(issue.title);
     embed.setDescription(issue.body);
     embed.setURL(issue.html_url);
+
     return embed;
 }
 
@@ -112,12 +121,12 @@ const command: ICommandType = {
         }
 
         if (title.length < 10) {
-            message.channel.send('Title must be at least 10 chars long. Use **!createissue help** for help.');
+            message.channel.send('Title must be at least 10 characters long. Use **!createissue help** for help.');
             return;
         }
 
         title = `${issueType.titlePrefix} ${title}`;
-        description = `${description}\n\nCreated by @${message.author.username}`;
+        description = `${description}\n\nCreated by @${message.author.username} via Discord`;
 
         let response: AxiosResponse<IIssue>;
         try {
@@ -146,7 +155,7 @@ const command: ICommandType = {
             return;
         }
 
-        message.channel.send(buildIssueEmbed(response.data));
+        message.channel.send('Issue created!', buildIssueEmbed(response.data, true));
     },
 };
 
