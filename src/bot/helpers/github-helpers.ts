@@ -73,9 +73,16 @@ export const issueCreateHelpEmbed = new RichEmbed()
 export const issueHelpEmbed = new RichEmbed()
     .setColor(0x00a4cf)
     .setAuthor('Issue Help', 'https://crowbartools.com/user-content/emotes/global/crowbar.png')
-    .addField('Search for an issue:', '!issue search [query]')
+    .addField('Search for an open issue:', '!issue search [query]')
+    .addField('Search issue for specified project:', '!issue search [project] [query]')
     .addField('Lookup specfic issue:', '!issue [issue#]')
-    .addField('Create an issue:', '!createissue help');
+    .addField('Lookup issue for specified project:', '!issue [project] [issue#]')
+    .addField('Create an issue:', '!createissue help')
+    .addField('*Projects*:', 'firebot, elixr')
+    .addField(
+        '\u200B',
+        "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
+    );
 
 export const creatingIssuePlaceholderEmbed = new RichEmbed()
     .setColor(8947848)
