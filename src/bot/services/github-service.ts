@@ -70,7 +70,7 @@ export async function getRecentCommits(getCommitsRequest: IGetCommitsRequest): P
 
     let response: AxiosResponse<ICommitData[]>;
     try {
-        response = await axios.get<ICommitData[]>(commitsUrl, defaultAxiosConfig);
+        response = await axios.get<ICommitData[]>(commitsUrl, getDefaultAxiosConfig());
     } catch (error) {
         console.log('Error getting recent commit messages', error);
     }
