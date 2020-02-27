@@ -33,6 +33,34 @@ export async function createIssue(createIssueRequest: ICreateIssueRequest): Prom
     return null;
 }
 
+export async function searchIssues(repo: string, search: string): Promise<IIssue[]> {
+    if (repo == null) {
+        return null;
+    }
+
+    let query = `repo:${repo} is:open ${search}`;
+
+    // github doesnt support queries longer than 256
+    if (query.length > 256) {
+        query = query.substring(0, 255);
+    }
+
+    const searchUrl = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}`;
+
+    let response: AxiosResponse<IIssue[]>;
+    try {
+        response = await axios.get<IIssue[]>(searchUrl, defaultAxiosConfig);
+    } catch (error) {
+        console.log('Error searching github issues', error);
+    }
+
+    if (response && response.status === 200) {
+        return response.data;
+    }
+
+    return null;
+}
+
 export async function getRecentCommits(getCommitsRequest: IGetCommitsRequest): Promise<ICommitData[]> {
     let commitsUrl = `https://api.github.com/repos/${getCommitsRequest.branch}/commits`;
     commitsUrl += `?sha=${getCommitsRequest.branch}`;

@@ -63,7 +63,24 @@ export const issueCreateHelpEmbed = new RichEmbed()
     )
     .addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]')
     .addField('Exampe 2 *(Title & Description)*:', '!createissue [type] t:[title] d:[description]')
-    .addField('*Issue Types*:', 'bug, feature, support');
+    .addField(
+        'Exampe 3 *(Title & Description & Project)*:',
+        '!createissue [type] t:[title] d:[description] p:[project]'
+    )
+    .addField('*Issue Types*:', 'bug, feature, support', true)
+    .addField('*Projects*:', 'firebot, elixr', true)
+    .addField(
+        '\u200B',
+        "*Note: If left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel.*"
+    );
+
+export const creatingIssuePlaceholderEmbed = new RichEmbed()
+    .setColor(8947848)
+    .setDescription('Attempting to create a new issue...');
+
+export function buildIssueCreateFailedEmbed(text: string): RichEmbed {
+    return new RichEmbed().setColor(16729927).setDescription(text);
+}
 
 export function buildIssueEmbed(issue: IIssue, firebotAuthor = false): RichEmbed {
     const embed = new RichEmbed().setColor(0x00a4cf);

@@ -1,9 +1,17 @@
 import { ICommandType } from '../../models/command';
-import { getDefaultProjectName, getProject, buildIssueEmbed, issueCreateHelpEmbed } from '../../helpers/github-helpers';
-import { createIssue } from '../../services/github-service';
+import {
+    getDefaultProjectName,
+    getProject,
+    buildIssueEmbed,
+    buildIssueCreateFailedEmbed,
+    issueCreateHelpEmbed,
+    creatingIssuePlaceholderEmbed,
+} from '../../helpers/github-helpers';
+import { searchIssues, createIssue } from '../../services/github-service';
 import NodeCache from 'node-cache';
+import { Message } from 'discord.js';
 
-const cooldownCache = new NodeCache({ stdTTL: 10, checkperiod: 20 });
+const cooldownCache = new NodeCache({ stdTTL: 15, checkperiod: 15 });
 
 enum CommandFlag {
     Title,
@@ -57,7 +65,7 @@ const command: ICommandType = {
 
         if (cooldownCache.get(message.author.username)) {
             message.channel.send(
-                `@${message.author.username}, you have created an issue recently, please wait a few moments.`
+                `@${message.author.username} you have used the Create Issue command recently, please wait a few moments.`
             );
             return;
         }
@@ -135,6 +143,22 @@ const command: ICommandType = {
         title = `${issueType.titlePrefix} ${title}`;
         description = `${description}\n\nCreated by @${message.author.username} via Discord`;
 
+        //add user to cooldown cache
+        cooldownCache.set(message.author.username, true);
+
+        const placeholderEmbedMessage = (await message.channel.send(creatingIssuePlaceholderEmbed)) as Message;
+        if (!placeholderEmbedMessage.edit) {
+            console.log('Placeholder embed failed!');
+            message.channel.send('There was an issue creating the issue. Please try again.');
+        }
+
+        const matchingIssues = await searchIssues(project.repo, title);
+
+        if (matchingIssues != null && matchingIssues.length > 0) {
+            placeholderEmbedMessage.edit(buildIssueCreateFailedEmbed('An issue with this name already exists!'));
+            return;
+        }
+
         const newIssue = await createIssue({
             repo: project.repo,
             title: title,
@@ -143,14 +167,13 @@ const command: ICommandType = {
         });
 
         if (newIssue == null) {
-            message.channel.send('Failed to create issue at this time. Please try again later.');
+            placeholderEmbedMessage.edit(
+                buildIssueCreateFailedEmbed('Failed to create issue at this time. Please try again later.')
+            );
             return;
         }
 
-        //add user to cooldown cache
-        cooldownCache.set(message.author.username, true);
-
-        message.channel.send('Issue created!', buildIssueEmbed(newIssue, true));
+        placeholderEmbedMessage.edit(buildIssueEmbed(newIssue, true));
     },
 };
 
