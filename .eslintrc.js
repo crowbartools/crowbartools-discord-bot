@@ -11,9 +11,13 @@ module.exports = {
       "prettier/@typescript-eslint",
       "plugin:prettier/recommended"
     ],
+
     rules: {
       "no-console": 0,
       "@typescript-eslint/interface-name-prefix": 0,
+    },
+    env: {
+      node: true,
     },
     parserOptions: {
       ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
