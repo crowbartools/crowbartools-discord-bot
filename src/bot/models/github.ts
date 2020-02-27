@@ -1,3 +1,10 @@
+export interface ICreateIssueRequest {
+    repo: string;
+    title: string;
+    body: string;
+    labels: string[];
+}
+
 export interface IIssue {
     number: number;
     title: string;

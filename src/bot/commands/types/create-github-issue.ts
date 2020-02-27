@@ -1,8 +1,9 @@
 import { ICommandType } from '../../models/command';
-import { RichEmbed } from 'discord.js';
-import { IIssue } from '../../models/github';
-import { getDefaultProjectName, getProject, buildIssueEmbed } from '../../helpers/github-helpers';
-import axios, { AxiosResponse } from 'axios';
+import { getDefaultProjectName, getProject, buildIssueEmbed, issueCreateHelpEmbed } from '../../helpers/github-helpers';
+import { createIssue } from '../../services/github-service';
+import NodeCache from 'node-cache';
+
+const cooldownCache = new NodeCache({ stdTTL: 10, checkperiod: 20 });
 
 enum CommandFlag {
     Title,
@@ -47,20 +48,17 @@ const command: ICommandType = {
         const args = userCommand.args;
 
         if (args.length === 1 && (args[0] === '?' || args[0].toLowerCase() === 'help')) {
-            const embed = new RichEmbed()
-                .setColor(0x00a4cf)
-                .setAuthor(
-                    'Create Issue Help',
-                    'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
-                    'https://github.com/crowbartools/Firebot/'
-                );
-            embed.addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]');
-            embed.addField('Exampe 2 *(Title & Description)*:', '!createissue [type] t:[title] d:[description]');
-            embed.addField('*Issue Types*:', 'bug, feature, support');
-            message.channel.send(embed);
+            message.channel.send(issueCreateHelpEmbed);
             return;
         } else if (args.length < 2) {
             message.channel.send('Not enough arguments. Use **!createissue help** for help.');
+            return;
+        }
+
+        if (cooldownCache.get(message.author.username)) {
+            message.channel.send(
+                `@${message.author.username}, you have created an issue recently, please wait a few moments.`
+            );
             return;
         }
 
@@ -137,34 +135,22 @@ const command: ICommandType = {
         title = `${issueType.titlePrefix} ${title}`;
         description = `${description}\n\nCreated by @${message.author.username} via Discord`;
 
-        let response: AxiosResponse<IIssue>;
-        try {
-            response = await axios.post(
-                `https://api.github.com/repos/${project.repo}/issues`,
-                {
-                    title: title,
-                    body: description,
-                    labels: [issueType.label],
-                },
-                {
-                    auth: {
-                        username: process.env.GITHUB_USER,
-                        password: process.env.GITHUB_TOKEN,
-                    },
-                }
-            );
-        } catch (error) {
-            console.log(error);
-            message.channel.send('Unable to create issue at this time. Please try again later.');
-            return;
-        }
+        const newIssue = await createIssue({
+            repo: project.repo,
+            title: title,
+            body: description,
+            labels: [issueType.label],
+        });
 
-        if (response.status !== 201) {
+        if (newIssue == null) {
             message.channel.send('Failed to create issue at this time. Please try again later.');
             return;
         }
 
-        message.channel.send('Issue created!', buildIssueEmbed(response.data, true));
+        //add user to cooldown cache
+        cooldownCache.set(message.author.username, true);
+
+        message.channel.send('Issue created!', buildIssueEmbed(newIssue, true));
     },
 };
 

@@ -54,6 +54,17 @@ export function getDefaultProjectName(message: Message): string {
     return projectName || ProjectName.Firebot;
 }
 
+export const issueCreateHelpEmbed = new RichEmbed()
+    .setColor(0x00a4cf)
+    .setAuthor(
+        'Create Issue Help',
+        'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
+        'https://github.com/crowbartools/Firebot/'
+    )
+    .addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]')
+    .addField('Exampe 2 *(Title & Description)*:', '!createissue [type] t:[title] d:[description]')
+    .addField('*Issue Types*:', 'bug, feature, support');
+
 export function buildIssueEmbed(issue: IIssue, firebotAuthor = false): RichEmbed {
     const embed = new RichEmbed().setColor(0x00a4cf);
 

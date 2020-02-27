@@ -7,7 +7,8 @@
     "axios": "^0.19.2",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "node-cache": "^5.1.0"
   },
   "devDependencies": {
     "@types/moment": "^2.13.0",
