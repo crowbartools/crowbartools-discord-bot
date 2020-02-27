@@ -143,10 +143,10 @@ const command: ICommandType = {
             return;
         }
 
-        title = `${issueType.titlePrefix} ${title.trim()}`;
+        title = `${issueType.titlePrefix} ${capitalize(title.trim(), false)}`;
         description = description ? description.trim() : '';
         if (description.length > 0) {
-            description = `@${message.author.username} via Discord:\n\n${description}`;
+            description = `@${message.author.username} via Discord:\n\n${capitalize(description.trim(), false)}`;
         }
 
         //add user to cooldown cache
@@ -167,8 +167,8 @@ const command: ICommandType = {
 
         const newIssue = await createIssue({
             repo: project.repo,
-            title: capitalize(title, false),
-            body: capitalize(description, false),
+            title: title,
+            body: description,
             labels: [issueType.label],
         });
 
