@@ -7,7 +7,7 @@ import { limitString } from '../../../common/util';
 const command: ICommandType = {
     triggers: ['!issue', '!i'],
     description: 'Look up a github issue or search issues.',
-    deleteTrigger: true,
+    deleteTrigger: false,
     async execute(message, userCommand) {
         const args = userCommand.args;
         if (args.length === 0 || (args.length === 1 && (args[0].toLowerCase() === 'help' || args[0] === '?'))) {
