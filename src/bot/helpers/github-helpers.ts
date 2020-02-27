@@ -85,7 +85,7 @@ export function buildIssueCreateFailedEmbed(text: string): RichEmbed {
     return new RichEmbed().setColor(16729927).setDescription(text);
 }
 
-export function buildIssueEmbed(issue: IIssue, projectName = 'firebot'): RichEmbed {
+export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showState = false): RichEmbed {
     const embed = new RichEmbed().setColor(0x00a4cf);
 
     if (projectName === 'elixr') {
@@ -121,6 +121,10 @@ export function buildIssueEmbed(issue: IIssue, projectName = 'firebot'): RichEmb
     embed.setDescription(body);
 
     embed.setURL(issue.html_url);
+
+    if (showState) {
+        embed.addField('status', issue.state);
+    }
 
     return embed;
 }

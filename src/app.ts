@@ -5,6 +5,7 @@ import { registerCommand } from './bot/commands/command-manager';
 import PingCommand from './bot/commands/types/ping';
 import v5UpdatesCommand from './bot/commands/types/v5-updates';
 import CreateGHIssueCommand from './bot/commands/types/create-github-issue';
+import LookupGHIssueCommand from './bot/commands/types/lookup-github-issue';
 
 function verifyEnvironment(): boolean {
     const envResult = dotenv.config();
@@ -15,18 +16,12 @@ function verifyEnvironment(): boolean {
     }
 
     const expectedKeys = ['DISCORD_TOKEN', 'GITHUB_USER', 'GITHUB_TOKEN'];
-    let keyMissing = false;
-    for (const key of expectedKeys) {
-        if (envResult.parsed[key] == null) {
-            console.error(`Could not find key ${key} in .env file.`);
-            keyMissing = true;
+    return expectedKeys.every(k => {
+        if (envResult.parsed[k]) {
+            return true;
         }
-    }
-    if (keyMissing) {
-        return false;
-    }
-
-    return true;
+        console.error(`Could not find key ${k} in .env file.`);
+    });
 }
 
 function start(): void {
@@ -39,6 +34,7 @@ function start(): void {
     registerCommand(PingCommand);
     registerCommand(v5UpdatesCommand);
     registerCommand(CreateGHIssueCommand);
+    registerCommand(LookupGHIssueCommand);
 
     // connect to discord
     bot.init();

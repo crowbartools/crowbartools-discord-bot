@@ -1,6 +1,6 @@
 import { RichEmbed } from 'discord.js';
 import { ICommandType } from '../../models/command';
-import { issueHelpEmbed, getDefaultProjectName, getProject } from '../../helpers/github-helpers';
+import { issueHelpEmbed, buildIssueEmbed, getDefaultProjectName, getProject } from '../../helpers/github-helpers';
 import { getIssue, searchIssues } from '../../services/github-service';
 import { limitString } from '../../../common/util';
 
@@ -54,9 +54,30 @@ const command: ICommandType = {
             for (const issueField of issueFields) {
                 embed.addField(issueField.name, issueField.value);
             }
+
+            message.channel.send(embed);
+            return;
         }
 
-        if (args.length === 1 && !isNaN(parseInt(args[0]))) {
+        // assume single issue lookup
+
+        let projectName = getDefaultProjectName(message);
+        if (['firebot', 'elixr'].includes(args[0].toLowerCase())) {
+            projectName = args[0].toLowerCase();
+            args.shift();
+        }
+        const project = getProject(projectName);
+
+        const issueNumber = parseInt(args[0]);
+        if (args.length > 0 && !isNaN(issueNumber)) {
+            const issue = await getIssue(project.repo, issueNumber);
+            if (issue == null) {
+                message.channel.send(`Issue #${issueNumber} does not exist.`);
+                return;
+            }
+            message.channel.send(buildIssueEmbed(issue, project.name));
+        } else {
+            message.channel.send('Not a valid Issue command. Use **!issue help** for help.');
         }
     },
 };
