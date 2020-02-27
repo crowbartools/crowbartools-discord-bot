@@ -45,14 +45,30 @@ const command: ICommandType = {
             const issueFields = issues.slice(0, 5).map(i => {
                 return {
                     name: `#${i.number}`,
-                    value: limitString(i.title, 250, '...'),
+                    value: limitString(i.title, 500, '...'),
+                    url: i.html_url,
                 };
             });
 
-            const embed = new RichEmbed().setColor(0x00a4cf).setAuthor('Issue Search');
+            const embed = new RichEmbed().setColor(0x00a4cf).setTitle('Issue Search');
+
+            if (project.name === 'elixr') {
+                embed.setAuthor(
+                    'MixrElixr',
+                    'https://raw.githubusercontent.com/crowbartools/MixrElixr/dev/src/resources/images/elixr-light-128.png',
+                    'https://github.com/crowbartools/MixrElixr/'
+                );
+            } else {
+                embed.setAuthor(
+                    'Firebot',
+                    'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
+                    'https://github.com/crowbartools/Firebot/'
+                );
+            }
 
             for (const issueField of issueFields) {
-                embed.addField(issueField.name, issueField.value);
+                const issueLink = `[${issueField.value}](${issueField.url})`;
+                embed.addField(issueField.name, issueLink);
             }
 
             message.channel.send(embed);
@@ -75,7 +91,7 @@ const command: ICommandType = {
                 message.channel.send(`Issue #${issueNumber} does not exist.`);
                 return;
             }
-            message.channel.send(buildIssueEmbed(issue, project.name));
+            message.channel.send(buildIssueEmbed(issue, project.name, true));
         } else {
             message.channel.send('Not a valid Issue command. Use **!issue help** for help.');
         }
