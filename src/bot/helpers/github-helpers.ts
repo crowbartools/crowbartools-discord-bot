@@ -156,8 +156,9 @@ export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showExpa
 
     if (showExpandedInfo) {
         embed.addField('status', issue.state, true);
-        embed.addField('labels', issue.labels && issue.labels.length > 0 ? issue.labels.join(',') : 'none', true);
-        embed.addField('comments', issue.comments);
+        const labelNames = issue.labels && issue.labels.length > 0 ? issue.labels.map(i => i.name).join(',') : 'none';
+        embed.addField('labels', labelNames, true);
+        embed.addField('comments', issue.comments, true);
     }
 
     return embed;
