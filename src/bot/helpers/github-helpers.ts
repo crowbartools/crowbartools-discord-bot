@@ -71,7 +71,7 @@ export const issueCreateHelpEmbed = new RichEmbed()
     .addField('*Projects*:', 'firebot, elixr', true)
     .addField(
         '\u200B',
-        "*Note: If left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel.*"
+        "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
     );
 
 export const creatingIssuePlaceholderEmbed = new RichEmbed()
