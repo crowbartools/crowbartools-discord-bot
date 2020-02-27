@@ -89,7 +89,7 @@ export const issueHelpEmbed = new RichEmbed()
     .addField('Search in specified project:', '!issue search [project] [query]')
     .addField('Lookup specfic issue:', '!issue [issue#]')
     .addField('Lookup in specified project:', '!issue [project] [issue#]')
-    .addField('Create an issue:', '!createissue help')
+    .addField('Create issue help:', '!createissue help')
     .addField('*Projects*:', 'firebot, elixr')
     .addField(
         '\u200B',
