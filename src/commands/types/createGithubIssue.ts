@@ -71,8 +71,7 @@ const command: ICommandType = {
                 );
             embed.addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]');
             embed.addField('Exampe 2 *(Title & Description)*:', '!createissue [type] t:[title] d:[description]');
-            embed.addBlankField();
-            embed.addField('Types:', 'bug, feature, support');
+            embed.addField('*Issue Types*:', 'bug, feature, support');
             message.channel.send(embed);
             return;
         } else if (args.length < 2) {
