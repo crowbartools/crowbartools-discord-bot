@@ -117,13 +117,13 @@ const command: ICommandType = {
 
                 switch (currentFlag) {
                     case CommandFlag.Title:
-                        title += arg;
+                        title += arg + ' ';
                         break;
                     case CommandFlag.Description:
-                        description += arg;
+                        description += arg + ' ';
                         break;
                     case CommandFlag.Project:
-                        projectName += arg;
+                        projectName += arg + ' ';
                 }
             }
         }
@@ -140,8 +140,8 @@ const command: ICommandType = {
             return;
         }
 
-        title = `${issueType.titlePrefix} ${title}`;
-        description = `${description}\n\nCreated by @${message.author.username} via Discord`;
+        title = `${issueType.titlePrefix} ${title.trim()}`;
+        description = `${description.trim()}\n\nCreated by @${message.author.username} via Discord`;
 
         //add user to cooldown cache
         cooldownCache.set(message.author.username, true);
