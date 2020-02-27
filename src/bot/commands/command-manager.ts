@@ -11,17 +11,19 @@ const registeredCommandTypes: ICommandType[] = [];
 export function registerCommand(commandType: ICommandType): void {
     if (commandType == null) return;
 
-    const commandTypeExists = registeredCommandTypes.some(
-        c => c.trigger.toLowerCase() === commandType.trigger.toLowerCase()
+    const commandTriggerExists = registeredCommandTypes.some(c =>
+        c.triggers.some(t => commandType.triggers.some(ct => ct.toLowerCase() === t.toLowerCase()))
     );
 
-    if (!commandTypeExists) {
+    if (!commandTriggerExists) {
         registeredCommandTypes.push(commandType);
     }
 }
 
 export function unregisterCommand(commandTrigger: string): void {
-    const index = registeredCommandTypes.findIndex(c => c.trigger === commandTrigger);
+    const index = registeredCommandTypes.findIndex(c =>
+        c.triggers.some(t => t.toLowerCase() === commandTrigger.toLowerCase())
+    );
     if (index > -1) {
         registeredCommandTypes.splice(index, 1);
     }
@@ -33,14 +35,14 @@ function checkForCommand(rawMessage: string): ICommandCheck {
     }
 
     // trim whitespace, then split message by space
-    const tokens = rawMessage.trim().split(' ');
+    const tokens = rawMessage.trim().split(/ +/);
 
     // get first token to test as a command trigger
     const trigger = tokens[0];
 
     // find matching command type
-    const commandType = registeredCommandTypes.find(
-        ct => (ct.ignoreCase && trigger.toLowerCase() === ct.trigger.toLowerCase()) || trigger === ct.trigger
+    const commandType = registeredCommandTypes.find(ct =>
+        ct.triggers.some(t => t.toLowerCase() === trigger.toLowerCase())
     );
 
     if (commandType != null) {

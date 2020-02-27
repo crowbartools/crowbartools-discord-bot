@@ -6,9 +6,8 @@ import { RichEmbed } from 'discord.js';
 import { ICommitData } from '../../models/github';
 
 const command: ICommandType = {
-    trigger: '!v5updates',
+    triggers: ['!v5updates'],
     description: 'List recent v5 commit messages.',
-    ignoreCase: true,
     deleteTrigger: false,
     async execute(message) {
         const sinceDate = moment()

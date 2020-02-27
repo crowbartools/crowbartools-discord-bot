@@ -1,8 +1,14 @@
 import { ICommandType } from '../../models/command';
 import { RichEmbed } from 'discord.js';
 import { IIssue } from '../../models/github';
+import { getDefaultProjectName, getProject, buildIssueEmbed } from '../../helpers/github-helpers';
 import axios, { AxiosResponse } from 'axios';
 
+enum CommandFlag {
+    Title,
+    Description,
+    Project,
+}
 interface IIssueType {
     name: string;
     titlePrefix: string;
@@ -20,44 +26,23 @@ function getIssueType(issueTypeName: string): IIssueType {
             return {
                 name: issueTypeName,
                 titlePrefix: '[Feature Request]',
-                label: 'Feature Request',
+                label: 'feature request',
             };
         case 'support':
             return {
                 name: issueTypeName,
                 titlePrefix: '[Support]',
-                label: 'Support',
+                label: 'support',
             };
         default:
             return null;
     }
 }
 
-function buildIssueEmbed(issue: IIssue, firebotAuthor = false): RichEmbed {
-    const embed = new RichEmbed().setColor(0x00a4cf);
-
-    if (!firebotAuthor) {
-        embed.setAuthor(issue.user.login, issue.user.avatar_url, `https://github.com/${issue.user.login}`);
-    } else {
-        embed.setAuthor(
-            'Firebot',
-            'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
-            'https://github.com/crowbartools/Firebot/'
-        );
-    }
-
-    embed.setTitle(issue.title);
-    embed.setDescription(issue.body);
-    embed.setURL(issue.html_url);
-
-    return embed;
-}
-
 const command: ICommandType = {
-    trigger: '!createissue',
+    triggers: ['!createissue', '!ci'],
     description: "Creates an issue on Firebot's GitHub repo.",
     deleteTrigger: true,
-    ignoreCase: true,
     async execute(message, userCommand) {
         const args = userCommand.args;
 
@@ -89,34 +74,59 @@ const command: ICommandType = {
         args.shift();
 
         const titleRegex = /t:|title:/i;
-        const descriptionRegex = /d:|description:/i;
         const hasTitleMarker = args.some(a => a.search(titleRegex) > -1);
 
         let title = '';
         let description = '';
+        let projectName = getDefaultProjectName(message);
         if (!hasTitleMarker) {
             const combinedArgs = args.join(' ');
             title = combinedArgs;
             description = combinedArgs;
         } else {
-            let inTitle = false;
-            let inDescription = false;
+            let currentFlag: CommandFlag;
+            const flagTypes = [
+                {
+                    regex: titleRegex,
+                    flag: CommandFlag.Title,
+                },
+                {
+                    regex: /d:|description:/i,
+                    flag: CommandFlag.Description,
+                },
+                {
+                    regex: /p:|project:/i,
+                    flag: CommandFlag.Project,
+                },
+            ];
             for (let arg of args) {
-                if (arg.search(titleRegex) > -1) {
-                    inTitle = true;
-                    inDescription = false;
-                    arg = arg.replace(titleRegex, '');
-                } else if (arg.search(descriptionRegex) > -1) {
-                    inTitle = false;
-                    inDescription = true;
-                    arg = arg.replace(descriptionRegex, '');
+                //detect if we are in a new flag
+                for (const flagType of flagTypes) {
+                    if (arg.search(flagType.regex) > -1) {
+                        currentFlag = flagType.flag;
+                        arg = arg.replace(flagType.regex, '');
+                        break;
+                    }
                 }
-                if (inTitle) {
-                    title += arg;
-                } else if (inDescription) {
-                    description += arg;
+
+                switch (currentFlag) {
+                    case CommandFlag.Title:
+                        title += arg;
+                        break;
+                    case CommandFlag.Description:
+                        description += arg;
+                        break;
+                    case CommandFlag.Project:
+                        projectName += arg;
                 }
             }
+        }
+
+        projectName = projectName.trim().toLowerCase();
+        const project = getProject(projectName);
+        if (project === null) {
+            message.channel.send(`${projectName} is not a valid project name. Use **!createissue help** for help.`);
+            return;
         }
 
         if (title.length < 10) {
@@ -130,7 +140,7 @@ const command: ICommandType = {
         let response: AxiosResponse<IIssue>;
         try {
             response = await axios.post(
-                'https://api.github.com/repos/crowbartools/Firebot/issues',
+                `https://api.github.com/repos/${project.repo}/issues`,
                 {
                     title: title,
                     body: description,

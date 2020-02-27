@@ -1,10 +1,9 @@
 import { Message } from 'discord.js';
 
 export interface ICommandType {
-    trigger: string;
+    triggers: string[];
     description: string;
     deleteTrigger: boolean;
-    ignoreCase: boolean;
     execute(message: Message, userCommand: IUserCommand): void;
 }
 

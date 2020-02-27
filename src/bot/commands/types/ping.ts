@@ -1,10 +1,9 @@
 import { ICommandType } from '../../models/command';
 
 const command: ICommandType = {
-    trigger: '!ping',
+    triggers: ['!ping'],
     description: 'Ping! Pong!',
     deleteTrigger: false,
-    ignoreCase: true,
     execute(message) {
         message.channel.send('Pong.');
     },
