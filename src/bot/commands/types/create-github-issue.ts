@@ -53,7 +53,7 @@ function getIssueType(issueTypeName: string): IIssueType {
 const command: ICommandType = {
     triggers: ['!createissue', '!ci'],
     description: "Creates an issue on Firebot's GitHub repo.",
-    deleteTrigger: true,
+    deleteTrigger: false,
     async execute(message, userCommand) {
         const args = userCommand.args;
 
@@ -150,8 +150,8 @@ const command: ICommandType = {
 
         const placeholderEmbedMessage = (await message.channel.send(creatingIssuePlaceholderEmbed)) as Message;
         if (!placeholderEmbedMessage.edit) {
-            console.log('Placeholder embed failed!');
-            message.channel.send('There was an issue creating the issue. Please try again.');
+            console.log('Placeholder embed failed!', placeholderEmbedMessage);
+            message.channel.send('There was an error creating the issue. Please try again.');
         }
 
         const matchingIssues = await searchIssues(project.repo, title);
@@ -173,6 +173,10 @@ const command: ICommandType = {
                 buildIssueCreateFailedEmbed('Failed to create issue at this time. Please try again later.')
             );
             return;
+        }
+
+        if (message.deletable) {
+            message.delete(0);
         }
 
         placeholderEmbedMessage.edit(buildIssueEmbed(newIssue, project.name));
