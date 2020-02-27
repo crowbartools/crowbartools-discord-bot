@@ -45,11 +45,12 @@ function checkForCommand(rawMessage: string): ICommandCheck {
     );
 
     if (commandType != null) {
+        tokens.shift();
         return {
             commandType,
             userCommand: {
                 trigger,
-                args: tokens.splice(1),
+                args: tokens,
             },
         };
     }

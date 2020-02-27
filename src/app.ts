@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
 import * as bot from './bot';
+
 import { registerCommand } from './commands/command-manager';
-import PingCommandType from './commands/types/ping';
-import v5UpdatesCommandType from './commands/types/v5Updates';
+import PingCommand from './commands/types/ping';
+import v5UpdatesCommand from './commands/types/v5Updates';
+import CreateGHIssueCommand from './commands/types/createGithubIssue';
 
 function verifyEnvironment(): boolean {
     const envResult = dotenv.config();
@@ -12,8 +14,15 @@ function verifyEnvironment(): boolean {
         return false;
     }
 
-    if (envResult.parsed['DISCORD_TOKEN'] == null) {
-        console.error('Could not find key DISCORD_TOKEN in .env file.');
+    const expectedKeys = ['DISCORD_TOKEN', 'GITHUB_USER', 'GITHUB_TOKEN'];
+    let keyMissing = false;
+    for (const key of expectedKeys) {
+        if (envResult.parsed[key] == null) {
+            console.error(`Could not find key ${key} in .env file.`);
+            keyMissing = true;
+        }
+    }
+    if (keyMissing) {
         return false;
     }
 
@@ -27,8 +36,9 @@ function start(): void {
     }
 
     // register our command types
-    registerCommand(PingCommandType);
-    registerCommand(v5UpdatesCommandType);
+    registerCommand(PingCommand);
+    registerCommand(v5UpdatesCommand);
+    registerCommand(CreateGHIssueCommand);
 
     // connect to discord
     bot.init();
