@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import * as bot from './bot/bot';
 
 import { registerCommand } from './bot/commands/command-manager';
-import PingCommand from './bot/commands/types/ping';
+import PingCommand from './bot/commands/types/ping/ping';
 import v5UpdatesCommand from './bot/commands/types/v5-updates';
 import CreateGHIssueCommand from './bot/commands/types/create-github-issue';
 import LookupGHIssueCommand from './bot/commands/types/lookup-github-issue';
