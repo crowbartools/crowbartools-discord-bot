@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import * as bot from './bot/commands/bot';
+import * as bot from './bot/bot';
 
 import { registerCommand } from './bot/commands/command-manager';
 import PingCommand from './bot/commands/types/ping';
