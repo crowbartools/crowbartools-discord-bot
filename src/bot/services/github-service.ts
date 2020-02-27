@@ -63,6 +63,27 @@ export async function searchIssues(repo: string, search: string): Promise<IIssue
     return null;
 }
 
+export async function getIssue(repo: string, issueNumber: number): Promise<IIssue> {
+    if (repo == null || issueNumber == null) {
+        return null;
+    }
+
+    const getIssueUrl = `https://api.github.com/repos/${repo}/issues/${issueNumber}`;
+
+    let response: AxiosResponse<IIssue>;
+    try {
+        response = await axios.get<IIssue>(getIssueUrl, getDefaultAxiosConfig());
+    } catch (error) {
+        console.log('Error getting github issue', error);
+    }
+
+    if (response && response.status === 200) {
+        return response.data;
+    }
+
+    return null;
+}
+
 export async function getRecentCommits(getCommitsRequest: IGetCommitsRequest): Promise<ICommitData[]> {
     let commitsUrl = `https://api.github.com/repos/${getCommitsRequest.branch}/commits`;
     commitsUrl += `?sha=${getCommitsRequest.branch}`;

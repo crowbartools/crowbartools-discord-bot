@@ -173,7 +173,7 @@ const command: ICommandType = {
             return;
         }
 
-        placeholderEmbedMessage.edit(buildIssueEmbed(newIssue, true));
+        placeholderEmbedMessage.edit(buildIssueEmbed(newIssue, project.name));
     },
 };
 

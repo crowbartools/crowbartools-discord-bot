@@ -56,11 +56,7 @@ export function getDefaultProjectName(message: Message): string {
 
 export const issueCreateHelpEmbed = new RichEmbed()
     .setColor(0x00a4cf)
-    .setAuthor(
-        'Create Issue Help',
-        'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png',
-        'https://github.com/crowbartools/Firebot/'
-    )
+    .setAuthor('Create Issue Help', 'https://crowbartools.com/user-content/emotes/global/crowbar.png')
     .addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]')
     .addField('Exampe 2 *(Title & Description)*:', '!createissue [type] t:[title] d:[description]')
     .addField(
@@ -74,6 +70,13 @@ export const issueCreateHelpEmbed = new RichEmbed()
         "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
     );
 
+export const issueHelpEmbed = new RichEmbed()
+    .setColor(0x00a4cf)
+    .setAuthor('Issue Help', 'https://crowbartools.com/user-content/emotes/global/crowbar.png')
+    .addField('Search for an issue:', '!issue search [query]')
+    .addField('Lookup specfic issue:', '!issue [issue#]')
+    .addField('Create an issue:', '!createissue help');
+
 export const creatingIssuePlaceholderEmbed = new RichEmbed()
     .setColor(8947848)
     .setDescription('Attempting to create a new issue...');
@@ -82,11 +85,15 @@ export function buildIssueCreateFailedEmbed(text: string): RichEmbed {
     return new RichEmbed().setColor(16729927).setDescription(text);
 }
 
-export function buildIssueEmbed(issue: IIssue, firebotAuthor = false): RichEmbed {
+export function buildIssueEmbed(issue: IIssue, projectName = 'firebot'): RichEmbed {
     const embed = new RichEmbed().setColor(0x00a4cf);
 
-    if (!firebotAuthor) {
-        embed.setAuthor(issue.user.login, issue.user.avatar_url, `https://github.com/${issue.user.login}`);
+    if (projectName === 'elixr') {
+        embed.setAuthor(
+            'MixrElixr',
+            'https://raw.githubusercontent.com/crowbartools/MixrElixr/dev/src/resources/images/elixr-light-128.png',
+            'https://github.com/crowbartools/MixrElixr/'
+        );
     } else {
         embed.setAuthor(
             'Firebot',
@@ -95,8 +102,24 @@ export function buildIssueEmbed(issue: IIssue, firebotAuthor = false): RichEmbed
         );
     }
 
-    embed.setTitle(`Issue #${issue.number}: ${issue.title}`);
-    embed.setDescription(issue.body);
+    // set footer if user isnt crowbartools robot
+    if (issue.user.login !== 'CrowbarToolsRobot') {
+        embed.setFooter(issue.user.login, issue.user.avatar_url);
+    }
+
+    embed.setTimestamp(new Date(issue.created_at));
+
+    let title = `Issue #${issue.number}: ${issue.title}`;
+    if (title.length > 256) {
+        title = title.substring(0, 255);
+    }
+    let body = issue.body;
+    if (body.length > 350) {
+        body = body.substring(0, 350).trim() + '...';
+    }
+    embed.setTitle(title);
+    embed.setDescription(body);
+
     embed.setURL(issue.html_url);
 
     return embed;

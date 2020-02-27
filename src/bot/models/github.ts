@@ -20,6 +20,7 @@ export interface IIssue {
         avatar_url: string;
     };
     state: string;
+    created_at: string;
     html_url: string;
 }
 
