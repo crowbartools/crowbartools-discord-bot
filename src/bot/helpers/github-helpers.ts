@@ -95,7 +95,7 @@ export function buildIssueEmbed(issue: IIssue, firebotAuthor = false): RichEmbed
         );
     }
 
-    embed.setTitle(issue.title);
+    embed.setTitle(`Issue #${issue.number}: ${issue.title}`);
     embed.setDescription(issue.body);
     embed.setURL(issue.html_url);
 
