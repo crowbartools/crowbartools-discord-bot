@@ -3,8 +3,8 @@ import * as bot from './bot/commands/bot';
 
 import { registerCommand } from './bot/commands/command-manager';
 import PingCommand from './bot/commands/types/ping';
-import v5UpdatesCommand from './bot/commands/types/v5Updates';
-import CreateGHIssueCommand from './bot/commands/types/createGithubIssue';
+import v5UpdatesCommand from './bot/commands/types/v5-updates';
+import CreateGHIssueCommand from './bot/commands/types/create-github-issue';
 
 function verifyEnvironment(): boolean {
     const envResult = dotenv.config();
