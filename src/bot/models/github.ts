@@ -11,6 +11,10 @@ export interface IGetCommitsRequest {
     sinceDateString: string;
 }
 
+interface IIssueLabel {
+    name: string;
+}
+
 export interface IIssue {
     number: number;
     title: string;
@@ -19,6 +23,8 @@ export interface IIssue {
         login: string;
         avatar_url: string;
     };
+    labels: IIssueLabel[];
+    comments: number;
     state: string;
     created_at: string;
     html_url: string;
