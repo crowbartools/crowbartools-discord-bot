@@ -3,18 +3,7 @@ import ICommandType from '../ICommandType';
 import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';
 import { RichEmbed } from 'discord.js';
-
-interface IGitHubCommitData {
-    commit: {
-        message: string;
-        committer: {
-            date: string;
-        };
-    };
-    author: {
-        login: string;
-    };
-}
+import { ICommitData } from '../../models/github';
 
 const command: ICommandType = {
     trigger: '!v5updates',
@@ -27,9 +16,9 @@ const command: ICommandType = {
             .format();
         const v5CommitsUrl = `https://api.github.com/repos/crowbartools/Firebot/commits?sha=v5&since=${sinceDate}`;
 
-        let response: AxiosResponse;
+        let response: AxiosResponse<ICommitData[]>;
         try {
-            response = await axios.get(v5CommitsUrl, {
+            response = await axios.get<ICommitData[]>(v5CommitsUrl, {
                 headers: {
                     'User-Agent': 'ebiggz/CrowbarToolsDiscordBot',
                 },
@@ -44,7 +33,7 @@ const command: ICommandType = {
             return;
         }
 
-        const commits: IGitHubCommitData[] = response.data;
+        const commits = response.data;
         const commitMessages = commits.slice(0, 10).map(c => {
             return {
                 message: c.commit.message,

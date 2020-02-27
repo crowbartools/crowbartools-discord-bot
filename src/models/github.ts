@@ -9,3 +9,15 @@ export interface IIssue {
     state: string;
     html_url: string;
 }
+
+export interface ICommitData {
+    commit: {
+        message: string;
+        committer: {
+            date: string;
+        };
+    };
+    author: {
+        login: string;
+    };
+}
