@@ -1,4 +1,5 @@
 import { ICommandType } from '../../models/command';
+import { capitalize } from '../../../common/util';
 import {
     getDefaultProjectName,
     getProject,
@@ -163,7 +164,7 @@ const command: ICommandType = {
 
         const newIssue = await createIssue({
             repo: project.repo,
-            title: title,
+            title: capitalize(title, false),
             body: description,
             labels: [issueType.label],
         });

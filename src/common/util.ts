@@ -11,3 +11,6 @@ export function limitString(input: string, lengthLimit: number, suffix?: string)
     }
     return input;
 }
+
+export const capitalize = (input: string, forceRestLower = true): string =>
+    input.charAt(0).toUpperCase() + (forceRestLower ? input.slice(0).toLowerCase() : input.slice(0));
