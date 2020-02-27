@@ -5,11 +5,9 @@ export function escapeRegExp(input: string): string {
 export function limitString(input: string, lengthLimit: number, suffix?: string): string {
     if (input.length > lengthLimit) {
         input = input.substring(0, lengthLimit - 1);
+        if (suffix) {
+            input = input.trim() + suffix;
+        }
     }
-
-    if (suffix) {
-        input = input.trim() + suffix;
-    }
-
     return input;
 }

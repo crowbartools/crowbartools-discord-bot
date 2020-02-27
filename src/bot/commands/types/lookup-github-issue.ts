@@ -45,7 +45,7 @@ const command: ICommandType = {
             const issueFields = issues.slice(0, 5).map(i => {
                 return {
                     name: `#${i.number}`,
-                    value: limitString(i.title, 500, '...'),
+                    value: limitString(i.title, 250, '...'),
                     url: i.html_url,
                 };
             });
