@@ -6,6 +6,7 @@ import PingCommand from './bot/commands/types/ping/ping';
 import v5UpdatesCommand from './bot/commands/types/v5-updates';
 import CreateGHIssueCommand from './bot/commands/types/create-github-issue';
 import LookupGHIssueCommand from './bot/commands/types/lookup-github-issue';
+import SayCommand from './bot/commands/types/say';
 
 function verifyEnvironment(): boolean {
     const envResult = dotenv.config();
@@ -35,6 +36,7 @@ function start(): void {
     registerCommand(v5UpdatesCommand);
     registerCommand(CreateGHIssueCommand);
     registerCommand(LookupGHIssueCommand);
+    registerCommand(SayCommand);
 
     // connect to discord
     bot.init();
