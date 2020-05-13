@@ -3,7 +3,7 @@ import { ICommandType } from '../../models/command';
 const command: ICommandType = {
     triggers: ['!say'],
     description: 'Make the bot say something.',
-    deleteTrigger: false,
+    deleteTrigger: true,
     async execute(message, userCommand) {
         const isAdmin = message.member.roles.find(c => c.name === 'Admin');
         if (!isAdmin) return;
