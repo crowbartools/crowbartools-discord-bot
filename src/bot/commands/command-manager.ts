@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Interaction, Message } from 'discord.js';
 import { ICommandType, IUserCommand } from '../models/command';
 
 interface ICommandCheck {
@@ -27,6 +27,14 @@ export function unregisterCommand(commandTrigger: string): void {
     if (index > -1) {
         registeredCommandTypes.splice(index, 1);
     }
+}
+
+export function getRegisteredSlashCommands(): ICommandType[] {
+    return registeredCommandTypes.filter(c => c.supportsSlashCommands && c.slashCommandConfig != null);
+}
+
+function checkForSlashCommand(commandName: string): ICommandType {
+    return registeredCommandTypes.find(c => c.supportsSlashCommands && c.slashCommandConfig?.name === commandName);
 }
 
 function checkForCommand(rawMessage: string): ICommandCheck {
@@ -68,7 +76,15 @@ export function handleMessage(message: Message): void {
         command.execute(message, commandCheck.userCommand);
 
         if (command.deleteTrigger && message.deletable) {
-            message.delete(0);
+            message.delete();
         }
     }
+}
+
+export function handleInteraction(interaction: Interaction): void {
+    const command = checkForSlashCommand(interaction.name);
+
+    if (!command) return;
+
+    command.handleInteraction(interaction);
 }

@@ -1,4 +1,4 @@
-import { RichEmbed, Message } from 'discord.js';
+import { MessageEmbed, Message } from 'discord.js';
 import moment from 'moment';
 import { IIssue, ICommitData } from '../models/github';
 import { DiscordChannels } from './crowbar-helpers';
@@ -66,7 +66,7 @@ export function getDefaultProjectName(message: Message): string {
 //#endregion
 
 //#region rich embeds
-export const issueCreateHelpEmbed = new RichEmbed()
+export const issueCreateHelpEmbed = new MessageEmbed()
     .setColor(0x00a4cf)
     .setAuthor('Create Issue Help', crowbarLogoUrl)
     .addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]')
@@ -82,7 +82,7 @@ export const issueCreateHelpEmbed = new RichEmbed()
         "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
     );
 
-export const issueHelpEmbed = new RichEmbed()
+export const issueHelpEmbed = new MessageEmbed()
     .setColor(0x00a4cf)
     .setAuthor('Issue Help', crowbarLogoUrl)
     .addField('Search for an open issue:', '!issue search [query]')
@@ -96,7 +96,7 @@ export const issueHelpEmbed = new RichEmbed()
         "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
     );
 
-export function buildIssueSearchEmbed(issues: IIssue[], projectName = 'firebot'): RichEmbed {
+export function buildIssueSearchEmbed(issues: IIssue[], projectName = 'firebot'): MessageEmbed {
     const issueFields = issues.slice(0, 5).map(i => {
         return {
             name: `#${i.number}`,
@@ -105,7 +105,7 @@ export function buildIssueSearchEmbed(issues: IIssue[], projectName = 'firebot')
         };
     });
 
-    const embed = new RichEmbed().setColor(0x00a4cf).setTitle('Issue Search');
+    const embed = new MessageEmbed().setColor(0x00a4cf).setTitle('Issue Search');
 
     if (projectName === 'elixr') {
         embed.setAuthor('MixrElixr', elixrLogoUrl, elixrRepoUrl);
@@ -121,16 +121,16 @@ export function buildIssueSearchEmbed(issues: IIssue[], projectName = 'firebot')
     return embed;
 }
 
-export const creatingIssuePlaceholderEmbed = new RichEmbed()
+export const creatingIssuePlaceholderEmbed = new MessageEmbed()
     .setColor(8947848)
     .setDescription('Attempting to create a new issue...');
 
-export function buildIssueCreateFailedEmbed(text: string): RichEmbed {
-    return new RichEmbed().setColor(16729927).setDescription(text);
+export function buildIssueCreateFailedEmbed(text: string): MessageEmbed {
+    return new MessageEmbed().setColor(16729927).setDescription(text);
 }
 
-export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showExpandedInfo = false): RichEmbed {
-    const embed = new RichEmbed().setColor(0x00a4cf);
+export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showExpandedInfo = false): MessageEmbed {
+    const embed = new MessageEmbed().setColor(0x00a4cf);
 
     if (projectName === 'elixr') {
         embed.setAuthor('MixrElixr', elixrLogoUrl, elixrRepoUrl);
@@ -168,7 +168,7 @@ export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showExpa
     return embed;
 }
 
-export function buildRecentCommitsEmbed(commits: ICommitData[]): RichEmbed {
+export function buildRecentCommitsEmbed(commits: ICommitData[]): MessageEmbed {
     const commitMessages = commits.slice(0, 10).map(c => {
         return {
             message: c.commit.message,
@@ -177,7 +177,7 @@ export function buildRecentCommitsEmbed(commits: ICommitData[]): RichEmbed {
         };
     });
 
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
         .setColor(0x00a4cf)
         .setAuthor('Recent V5 Commits', firebotLogoUrl, `${firebotRepoUrl}commits/v5`);
 

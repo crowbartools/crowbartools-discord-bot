@@ -5,7 +5,7 @@ const command: ICommandType = {
     description: 'Make the bot say something.',
     deleteTrigger: true,
     async execute(message, userCommand) {
-        const isAdmin = message.member.roles.find(c => c.name === 'Admin');
+        const isAdmin = message.member.roles.cache.find(c => c.name === 'Admin');
         if (!isAdmin) return;
 
         const args = userCommand.args;
