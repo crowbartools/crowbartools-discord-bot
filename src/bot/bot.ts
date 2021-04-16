@@ -7,7 +7,7 @@ import {
 import interactions from 'discord-slash-commands-client';
 
 const BOT_APP_ID = '539509249726873600';
-const CROWBAR_GUILD_ID = '428739554833334274';
+const CROWBAR_GUILD_ID = '372817064034959370';
 
 const discordClient = new Client();
 
