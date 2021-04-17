@@ -2,13 +2,16 @@ name: Deploy Bot
 
 # Only runs after PRs have been merged into master
 on:
-  push:
-    branches: 'master'
+  pull_request:
+    types: [closed]
+    branches:
+      - master
 
 jobs:
   deploy:
     name: Deploy Bot
     runs-on: 'ubuntu-latest'
+    if: github.event.pull_request.merged == true
     steps:
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.4
