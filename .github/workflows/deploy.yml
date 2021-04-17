@@ -2,22 +2,22 @@ name: Deploy Bot
 
 # Only runs after PRs have been merged into master
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - master
+    pull_request:
+        types: [closed]
+        branches:
+            - master
 
 jobs:
-  deploy:
-    name: Deploy Bot
-    runs-on: 'ubuntu-latest'
-    if: github.event.pull_request.merged == true
-    steps:
-      - name: SSH Remote Commands
-        uses: appleboy/ssh-action@v0.1.4
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: cd /srv/crowbartools-discord-bot/ && git pull && npm install && npm run build
+    deploy:
+        name: Deploy Bot
+        runs-on: 'ubuntu-latest'
+        if: github.event.pull_request.merged == true
+        steps:
+            - name: SSH Remote Commands
+              uses: appleboy/ssh-action@v0.1.4
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  password: ${{ secrets.PASSWORD }}
+                  port: ${{ secrets.PORT }}
+                  script: cd /srv/crowbartools-discord-bot/ && git reset --hard origin/master && npm install && npm run build
