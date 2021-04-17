@@ -1,0 +1,20 @@
+name: Build Status
+
+# Only runs after PRs have been merged into master
+on:
+  push:
+    branches: 'master'
+
+jobs:
+  deploy:
+    name: Deploy Bot
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: cd /srv/crowbartools-discord-bot/ && git pull && npm install && npm run build
