@@ -66,7 +66,7 @@ export function init(): void {
 
     // attach and event listener for the interactionCreate event
     discordClient.on('interactionCreate', async interaction => {
-        handleInteraction(interaction);
+        handleInteraction(interaction, discordClient);
     });
 
     discordClient.login(process.env.DISCORD_TOKEN);

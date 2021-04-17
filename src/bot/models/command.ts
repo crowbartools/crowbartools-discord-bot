@@ -2,7 +2,7 @@ import {
     ApplicationOptions,
     ApplicationCommandPermissions,
 } from 'discord-slash-commands-client';
-import { Interaction, Message } from 'discord.js';
+import { Client, Interaction, Message } from 'discord.js';
 
 export interface ICommandType {
     triggers: string[];
@@ -12,7 +12,7 @@ export interface ICommandType {
     supportsSlashCommands?: boolean;
     slashCommandConfig?: ApplicationOptions;
     slashCommandPermissions?: ApplicationCommandPermissions[];
-    handleInteraction?(interaction: Interaction): void;
+    handleInteraction?(interaction: Interaction, discordClient: Client): void;
 }
 
 export interface IUserCommand {

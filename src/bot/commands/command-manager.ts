@@ -1,4 +1,4 @@
-import { Interaction, Message } from 'discord.js';
+import { Client, Interaction, Message } from 'discord.js';
 import { ICommandType, IUserCommand } from '../models/command';
 
 interface ICommandCheck {
@@ -91,10 +91,13 @@ export function handleMessage(message: Message): void {
     }
 }
 
-export function handleInteraction(interaction: Interaction): void {
+export function handleInteraction(
+    interaction: Interaction,
+    discordClient: Client
+): void {
     const command = checkForSlashCommand(interaction.name);
 
     if (!command) return;
 
-    command.handleInteraction(interaction);
+    command.handleInteraction(interaction, discordClient);
 }
