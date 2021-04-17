@@ -1,4 +1,4 @@
-import { Interaction, Message } from 'discord.js';
+import { Client, Interaction, Message } from 'discord.js';
 import { ICommandType, IUserCommand } from '../models/command';
 
 interface ICommandCheck {
@@ -12,7 +12,11 @@ export function registerCommand(commandType: ICommandType): void {
     if (commandType == null) return;
 
     const commandTriggerExists = registeredCommandTypes.some(c =>
-        c.triggers.some(t => commandType.triggers.some(ct => ct.toLowerCase() === t.toLowerCase()))
+        c.triggers.some(t =>
+            commandType.triggers.some(
+                ct => ct.toLowerCase() === t.toLowerCase()
+            )
+        )
     );
 
     if (!commandTriggerExists) {
@@ -30,11 +34,17 @@ export function unregisterCommand(commandTrigger: string): void {
 }
 
 export function getRegisteredSlashCommands(): ICommandType[] {
-    return registeredCommandTypes.filter(c => c.supportsSlashCommands && c.slashCommandConfig != null);
+    return registeredCommandTypes.filter(
+        c => c.supportsSlashCommands && c.slashCommandConfig != null
+    );
 }
 
 function checkForSlashCommand(commandName: string): ICommandType {
-    return registeredCommandTypes.find(c => c.supportsSlashCommands && c.slashCommandConfig?.name === commandName);
+    return registeredCommandTypes.find(
+        c =>
+            c.supportsSlashCommands &&
+            c.slashCommandConfig?.name === commandName
+    );
 }
 
 function checkForCommand(rawMessage: string): ICommandCheck {
@@ -81,10 +91,13 @@ export function handleMessage(message: Message): void {
     }
 }
 
-export function handleInteraction(interaction: Interaction): void {
+export function handleInteraction(
+    interaction: Interaction,
+    discordClient: Client
+): void {
     const command = checkForSlashCommand(interaction.name);
 
     if (!command) return;
 
-    command.handleInteraction(interaction);
+    command.handleInteraction(interaction, discordClient);
 }

@@ -39,10 +39,18 @@ export function init(): void {
         const registeredSlashCommands = getRegisteredSlashCommands();
         for (const command of registeredSlashCommands) {
             try {
-                await interactionsClient.createCommand(
+                const createdCommand = await interactionsClient.createCommand(
                     command.slashCommandConfig,
                     CROWBAR_GUILD_ID
                 );
+
+                if (command.slashCommandPermissions) {
+                    await interactionsClient.editCommandPermissions(
+                        command.slashCommandPermissions,
+                        CROWBAR_GUILD_ID,
+                        createdCommand.id
+                    );
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -58,7 +66,7 @@ export function init(): void {
 
     // attach and event listener for the interactionCreate event
     discordClient.on('interactionCreate', async interaction => {
-        handleInteraction(interaction);
+        handleInteraction(interaction, discordClient);
     });
 
     discordClient.login(process.env.DISCORD_TOKEN);
