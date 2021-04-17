@@ -39,10 +39,18 @@ export function init(): void {
         const registeredSlashCommands = getRegisteredSlashCommands();
         for (const command of registeredSlashCommands) {
             try {
-                await interactionsClient.createCommand(
+                const createdCommand = await interactionsClient.createCommand(
                     command.slashCommandConfig,
                     CROWBAR_GUILD_ID
                 );
+
+                if (command.slashCommandPermissions) {
+                    await interactionsClient.editCommandPermissions(
+                        command.slashCommandPermissions,
+                        CROWBAR_GUILD_ID,
+                        createdCommand.id
+                    );
+                }
             } catch (error) {
                 console.error(error);
             }
