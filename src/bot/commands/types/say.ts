@@ -45,6 +45,8 @@ const command: ICommandType = {
                 required: false,
             },
         ],
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        default_permission: false,
     },
     slashCommandPermissions: [
         {
