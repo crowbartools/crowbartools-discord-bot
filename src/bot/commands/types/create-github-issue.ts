@@ -32,19 +32,19 @@ function getIssueType(issueTypeName: string): IIssueType {
             return {
                 name: issueTypeName,
                 titlePrefix: '[Bug]',
-                label: 'bug',
+                label: 'Bug',
             };
         case 'feature':
             return {
                 name: issueTypeName,
                 titlePrefix: '[Feature Request]',
-                label: 'feature request',
+                label: 'Enhancement',
             };
         case 'support':
             return {
                 name: issueTypeName,
                 titlePrefix: '[Support]',
-                label: 'support',
+                label: 'Support',
             };
         case 'dev':
         case 'debt':
@@ -55,7 +55,7 @@ function getIssueType(issueTypeName: string): IIssueType {
             return {
                 name: issueTypeName,
                 titlePrefix: '[Tech Debt]',
-                label: 'tech debt',
+                label: 'Tech Debt',
             };
         default:
             return null;
