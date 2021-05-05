@@ -4,12 +4,14 @@ import { IIssue, ICommitData } from '../models/github';
 import { DiscordChannels } from './crowbar-helpers';
 import { limitString } from '../../common/util';
 
-const firebotLogoUrl = 'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png';
+const firebotLogoUrl =
+    'https://raw.githubusercontent.com/crowbartools/Firebot/master/gui/images/logo_transparent.png';
 const firebotRepoUrl = 'https://github.com/crowbartools/Firebot/';
 const elixrLogoUrl =
     'https://raw.githubusercontent.com/crowbartools/MixrElixr/dev/src/resources/images/elixr-light-128.png';
 const elixrRepoUrl = 'https://github.com/crowbartools/MixrElixr/';
-const crowbarLogoUrl = 'https://crowbartools.com/user-content/emotes/global/crowbar.png';
+const crowbarLogoUrl =
+    'https://crowbartools.com/user-content/emotes/global/crowbar.png';
 
 //#region project helpers
 export interface IProject {
@@ -69,34 +71,17 @@ export function getDefaultProjectName(message: Message): string {
 export const issueCreateHelpEmbed = new MessageEmbed()
     .setColor(0x00a4cf)
     .setAuthor('Create Issue Help', crowbarLogoUrl)
-    .addField('Exampe 1 *(Title only)*:', '!createissue [type] [title]')
-    .addField('Exampe 2 *(Title & Description)*:', '!createissue [type] t:[title] d:[description]')
-    .addField(
-        'Exampe 3 *(Title & Description & Project)*:',
-        '!createissue [type] t:[title] d:[description] p:[project]'
-    )
-    .addField('*Issue Types*:', 'bug, feature, support', true)
-    .addField('*Projects*:', 'firebot, elixr', true)
-    .addField(
-        '\u200B',
-        "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
-    );
+    .setDescription('Please use **/createissue** to create issues :)');
 
 export const issueHelpEmbed = new MessageEmbed()
     .setColor(0x00a4cf)
     .setAuthor('Issue Help', crowbarLogoUrl)
     .addField('Search for an open issue:', '!issue search [query]')
-    .addField('Search in specified project:', '!issue search [project] [query]')
-    .addField('Lookup specfic issue:', '!issue [issue#]')
-    .addField('Lookup in specified project:', '!issue [project] [issue#]')
-    .addField('Create issue help:', '!createissue help')
-    .addField('*Projects*:', 'firebot, elixr')
-    .addField(
-        '\u200B',
-        "*Note*: When left out, the project is automatically inferred as 'elixr' in elixr related channels and 'firebot' in every other channel."
-    );
-
-export function buildIssueSearchEmbed(issues: IIssue[], projectName = 'firebot'): MessageEmbed {
+    .addField('Lookup specific issue:', '!issue [issue#]');
+export function buildIssueSearchEmbed(
+    issues: IIssue[],
+    projectName = 'firebot'
+): MessageEmbed {
     const issueFields = issues.slice(0, 5).map(i => {
         return {
             name: `#${i.number}`,
@@ -105,7 +90,9 @@ export function buildIssueSearchEmbed(issues: IIssue[], projectName = 'firebot')
         };
     });
 
-    const embed = new MessageEmbed().setColor(0x00a4cf).setTitle('Issue Search');
+    const embed = new MessageEmbed()
+        .setColor(0x00a4cf)
+        .setTitle('Issue Search');
 
     if (projectName === 'elixr') {
         embed.setAuthor('MixrElixr', elixrLogoUrl, elixrRepoUrl);
@@ -129,7 +116,11 @@ export function buildIssueCreateFailedEmbed(text: string): MessageEmbed {
     return new MessageEmbed().setColor(16729927).setDescription(text);
 }
 
-export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showExpandedInfo = false): MessageEmbed {
+export function buildIssueEmbed(
+    issue: IIssue,
+    projectName = 'firebot',
+    showExpandedInfo = false
+): MessageEmbed {
     const embed = new MessageEmbed().setColor(0x00a4cf);
 
     if (projectName === 'elixr') {
@@ -160,7 +151,10 @@ export function buildIssueEmbed(issue: IIssue, projectName = 'firebot', showExpa
 
     if (showExpandedInfo) {
         embed.addField('status', issue.state, true);
-        const labelNames = issue.labels && issue.labels.length > 0 ? issue.labels.map(i => i.name).join(', ') : 'none';
+        const labelNames =
+            issue.labels && issue.labels.length > 0
+                ? issue.labels.map(i => i.name).join(', ')
+                : 'none';
         embed.addField('labels', labelNames, true);
         embed.addField('comments', issue.comments, true);
     }
@@ -179,7 +173,11 @@ export function buildRecentCommitsEmbed(commits: ICommitData[]): MessageEmbed {
 
     const embed = new MessageEmbed()
         .setColor(0x00a4cf)
-        .setAuthor('Recent V5 Commits', firebotLogoUrl, `${firebotRepoUrl}commits/v5`);
+        .setAuthor(
+            'Recent V5 Commits',
+            firebotLogoUrl,
+            `${firebotRepoUrl}commits/v5`
+        );
 
     for (const cm of commitMessages) {
         embed.addField(cm.message, `*${cm.name}* (${cm.date})`);
