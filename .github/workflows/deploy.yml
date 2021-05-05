@@ -20,4 +20,4 @@ jobs:
                   username: ${{ secrets.USERNAME }}
                   password: ${{ secrets.PASSWORD }}
                   port: ${{ secrets.PORT }}
-                  script: cd /srv/crowbartools-discord-bot/ && git reset --hard origin/master && npm install && npm run build
+                  script: cd /srv/crowbartools-discord-bot/ && git reset --hard origin/master && git pull && npm install && npm run build
