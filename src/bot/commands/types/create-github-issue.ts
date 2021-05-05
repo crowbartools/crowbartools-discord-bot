@@ -85,7 +85,7 @@ const command: ICommandType = {
 
         if (cooldownCache.get(message.author.username)) {
             message.channel.send(
-                `@${message.author.username} you have used the Create Issue command recently, please wait a few moments.`
+                `${message.author.username} you have used the Create Issue command recently, please wait a few moments.`
             );
             return;
         }
@@ -311,7 +311,7 @@ const command: ICommandType = {
 
         title = `${issueType.titlePrefix} ${capitalize(title.trim(), false)}`;
 
-        description = `@${
+        description = `${
             interaction.author.username
         } via Discord:\n\n${capitalize(description.trim(), false)}`;
 
