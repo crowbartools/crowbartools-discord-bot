@@ -10,8 +10,8 @@ import {
 } from 'discord-slash-commands-client';
 
 const BOT_APP_ID = '539509249726873600';
-//const CROWBAR_GUILD_ID = '372817064034959370';
-const CROWBAR_GUILD_ID = '428739554833334274'; // test server
+const CROWBAR_GUILD_ID = '372817064034959370';
+//const CROWBAR_GUILD_ID = '428739554833334274'; // test server
 
 const myIntents = new Intents();
 myIntents.add(
@@ -55,16 +55,26 @@ export function init(): void {
         })) as ApplicationCommand[];
 
         for (const command of slashCommands) {
-            await interactionsClient.deleteCommand(
-                command.id,
-                CROWBAR_GUILD_ID
-            );
+            console.log('Attempting to delete command: ', command.name);
+            try {
+                await interactionsClient.deleteCommand(
+                    command.id,
+                    CROWBAR_GUILD_ID
+                );
+            } catch (error) {
+                console.log('Failed to delete command: ', command.name);
+                console.error(error);
+            }
         }
 
         // register slash commands
         const commandsWithApplicationCommands = getRegisteredApplicationCommands();
         for (const command of commandsWithApplicationCommands) {
             for (const applicationCommandConfig of command.applicationCommands) {
+                console.log(
+                    'Attempting to create command: ',
+                    applicationCommandConfig.config.name
+                );
                 try {
                     const createdAppCommand = await interactionsClient.createCommand(
                         applicationCommandConfig.config,
@@ -79,6 +89,10 @@ export function init(): void {
                         );
                     }
                 } catch (error) {
+                    console.log(
+                        'Failed to create command: ',
+                        applicationCommandConfig.config.name
+                    );
                     console.error(error);
                 }
             }
