@@ -6,7 +6,7 @@
     "dependencies": {
         "axios": "^0.21.1",
         "discord-slash-commands-client": "https://github.com/ebiggz/discord-interactions/tarball/build",
-        "discord.js": "^13.2.0-dev",
+        "discord.js": "^13.1.0",
         "dotenv": "^8.2.0",
         "moment": "^2.24.0",
         "node-cache": "^5.1.0"

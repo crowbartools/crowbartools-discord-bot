@@ -22,6 +22,7 @@ myIntents.add(
 
 const discordClient = new Client({
     intents: myIntents,
+    partials: ['MESSAGE', 'CHANNEL', 'USER'],
 });
 
 /**
@@ -34,7 +35,6 @@ export function init(): void {
     );
 
     discordClient.on('messageCreate', message => {
-        console.log('I got a message!');
         // ignore messages from bots
         if (message.author.bot) return;
 
