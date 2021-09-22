@@ -1,21 +1,27 @@
-import { Client } from 'discord.js';
+import { Client, Intents } from 'discord.js';
 import {
     handleMessage,
     handleInteraction,
-    getRegisteredSlashCommands,
+    getRegisteredApplicationCommands,
 } from './commands/command-manager';
-import interactions from 'discord-slash-commands-client';
+import {
+    Client as InteractionClient,
+    ApplicationCommand,
+} from 'discord-slash-commands-client';
 
 const BOT_APP_ID = '539509249726873600';
-const CROWBAR_GUILD_ID = '372817064034959370';
+//const CROWBAR_GUILD_ID = '372817064034959370';
+const CROWBAR_GUILD_ID = '428739554833334274'; // test server
 
-const discordClient = new Client();
+const discordClient = new Client({
+    intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES],
+});
 
 /**
  * Logs into the discord server and starts listening for messages.
  */
 export function init(): void {
-    const interactionsClient = new interactions.Client(
+    const interactionsClient = new InteractionClient(
         process.env.DISCORD_TOKEN,
         BOT_APP_ID
     );
@@ -26,7 +32,7 @@ export function init(): void {
         // cleanup previously registered slash commands
         const slashCommands = (await interactionsClient.getCommands({
             guildID: CROWBAR_GUILD_ID,
-        })) as interactions.ApplicationCommand[];
+        })) as ApplicationCommand[];
 
         for (const command of slashCommands) {
             await interactionsClient.deleteCommand(
@@ -36,23 +42,25 @@ export function init(): void {
         }
 
         // register slash commands
-        const registeredSlashCommands = getRegisteredSlashCommands();
-        for (const command of registeredSlashCommands) {
-            try {
-                const createdCommand = await interactionsClient.createCommand(
-                    command.slashCommandConfig,
-                    CROWBAR_GUILD_ID
-                );
-
-                if (command.slashCommandPermissions) {
-                    await interactionsClient.editCommandPermissions(
-                        command.slashCommandPermissions,
-                        CROWBAR_GUILD_ID,
-                        createdCommand.id
+        const commandsWithApplicationCommands = getRegisteredApplicationCommands();
+        for (const command of commandsWithApplicationCommands) {
+            for (const applicationCommandConfig of command.applicationCommands) {
+                try {
+                    const createdAppCommand = await interactionsClient.createCommand(
+                        applicationCommandConfig.config,
+                        CROWBAR_GUILD_ID
                     );
+
+                    if (applicationCommandConfig.permissions != null) {
+                        await interactionsClient.editCommandPermissions(
+                            applicationCommandConfig.permissions,
+                            CROWBAR_GUILD_ID,
+                            createdAppCommand.id
+                        );
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
-            } catch (error) {
-                console.error(error);
             }
         }
     });

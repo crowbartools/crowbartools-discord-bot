@@ -156,7 +156,7 @@ export function buildIssueEmbed(
                 ? issue.labels.map(i => i.name).join(', ')
                 : 'none';
         embed.addField('labels', labelNames, true);
-        embed.addField('comments', issue.comments, true);
+        embed.addField('comments', issue.comments.toString(), true);
     }
 
     return embed;

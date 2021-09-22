@@ -9,9 +9,10 @@ export interface ICommandType {
     description: string;
     deleteTrigger: boolean;
     execute(message: Message, userCommand: IUserCommand): void;
-    supportsSlashCommands?: boolean;
-    slashCommandConfig?: ApplicationOptions;
-    slashCommandPermissions?: ApplicationCommandPermissions[];
+    applicationCommands?: Array<{
+        config: ApplicationOptions;
+        permissions?: ApplicationCommandPermissions[];
+    }>;
     handleInteraction?(interaction: Interaction, discordClient: Client): void;
 }
 

@@ -16,8 +16,14 @@ const command: ICommandType = {
         const args = userCommand.args;
 
         // help command
-        if (args.length === 0 || (args.length === 1 && (args[0].toLowerCase() === 'help' || args[0] === '?'))) {
-            message.channel.send(issueHelpEmbed);
+        if (
+            args.length === 0 ||
+            (args.length === 1 &&
+                (args[0].toLowerCase() === 'help' || args[0] === '?'))
+        ) {
+            message.channel.send({
+                embeds: [issueHelpEmbed],
+            });
             return;
         }
 
@@ -49,7 +55,9 @@ const command: ICommandType = {
                 return;
             }
 
-            message.channel.send(buildIssueSearchEmbed(issues));
+            message.channel.send({
+                embeds: [buildIssueSearchEmbed(issues)],
+            });
             return;
         }
 
@@ -69,12 +77,16 @@ const command: ICommandType = {
                 message.channel.send(`Issue #${issueNumber} does not exist.`);
                 return;
             }
-            message.channel.send(buildIssueEmbed(issue, project.name, true));
+            message.channel.send({
+                embeds: [buildIssueEmbed(issue, project.name, true)],
+            });
             return;
         }
 
         // unrecongized command
-        message.channel.send('Not a valid Issue command. Use **!issue help** for help.');
+        message.channel.send(
+            'Not a valid Issue command. Use **!issue help** for help.'
+        );
     },
 };
 

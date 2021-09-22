@@ -33,17 +33,15 @@ export function unregisterCommand(commandTrigger: string): void {
     }
 }
 
-export function getRegisteredSlashCommands(): ICommandType[] {
+export function getRegisteredApplicationCommands(): ICommandType[] {
     return registeredCommandTypes.filter(
-        c => c.supportsSlashCommands && c.slashCommandConfig != null
+        c => c.applicationCommands?.length > 0
     );
 }
 
-function checkForSlashCommand(commandName: string): ICommandType {
-    return registeredCommandTypes.find(
-        c =>
-            c.supportsSlashCommands &&
-            c.slashCommandConfig?.name === commandName
+function checkForApplicationCommand(commandName: string): ICommandType {
+    return registeredCommandTypes.find(c =>
+        c.applicationCommands?.some(ac => ac.config.name === commandName)
     );
 }
 
@@ -95,7 +93,11 @@ export function handleInteraction(
     interaction: Interaction,
     discordClient: Client
 ): void {
-    const command = checkForSlashCommand(interaction.name);
+    if (!(interaction.isContextMenu() || interaction.isCommand())) {
+        return;
+    }
+
+    const command = checkForApplicationCommand(interaction.commandName);
 
     if (!command) return;
 
