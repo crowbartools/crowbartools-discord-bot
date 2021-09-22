@@ -13,8 +13,15 @@ const BOT_APP_ID = '539509249726873600';
 //const CROWBAR_GUILD_ID = '372817064034959370';
 const CROWBAR_GUILD_ID = '428739554833334274'; // test server
 
+const myIntents = new Intents();
+myIntents.add(
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGES
+);
+
 const discordClient = new Client({
-    intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES],
+    intents: myIntents,
 });
 
 /**
@@ -25,6 +32,19 @@ export function init(): void {
         process.env.DISCORD_TOKEN,
         BOT_APP_ID
     );
+
+    discordClient.on('messageCreate', message => {
+        console.log('I got a message!');
+        // ignore messages from bots
+        if (message.author.bot) return;
+
+        handleMessage(message);
+    });
+
+    // attach and event listener for the interactionCreate event
+    discordClient.on('interactionCreate', async interaction => {
+        handleInteraction(interaction, discordClient);
+    });
 
     discordClient.on('ready', async () => {
         console.log(`Logged in as ${discordClient.user.tag}!`);
@@ -63,18 +83,6 @@ export function init(): void {
                 }
             }
         }
-    });
-
-    discordClient.on('message', message => {
-        // ignore messages from bots
-        if (message.author.bot) return;
-
-        handleMessage(message);
-    });
-
-    // attach and event listener for the interactionCreate event
-    discordClient.on('interactionCreate', async interaction => {
-        handleInteraction(interaction, discordClient);
     });
 
     discordClient.login(process.env.DISCORD_TOKEN);
