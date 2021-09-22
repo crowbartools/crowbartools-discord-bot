@@ -360,10 +360,7 @@ const command: ICommandType = {
 
             title = limitString(message.content, 50, '...');
 
-            description = `**Original Discord message by ${message.author.username}:**
-            ${message.content}
-
-            > Issue created by ${interaction.user.username} via Discord`;
+            description = `**Original Discord message by ${message.author.username}:**\n${message.content}\n\n> Issue created by ${interaction.user.username} via Discord`;
         } else if (interaction.isCommand()) {
             await interaction.deferReply();
 
