@@ -7,7 +7,7 @@
         "axios": "^0.21.1",
         "discord-api-types": "^0.32.0",
         "discord-modals": "^1.3.5",
-        "discord-slash-commands-client": "ebiggz/discord-interactions#c4117e9",
+        "discord-slash-commands-client": "ebiggz/discord-interactions#4c3cb319f74ac56a516ad09688d0507ec5aef866",
         "discord.js": "^13.1.0",
         "dotenv": "^8.2.0",
         "moment": "^2.24.0",

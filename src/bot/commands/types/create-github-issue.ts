@@ -6,7 +6,6 @@ import {
     ProjectName,
 } from '../../helpers/github-helpers';
 import { searchIssues, createIssue } from '../../services/github-service';
-import { ApplicationOptions } from 'discord-slash-commands-client';
 import {
     Modal,
     ModalSubmitInteraction,
@@ -116,29 +115,29 @@ const command: ICommandType = {
     applicationCommands: [
         {
             config: {
-                name: CreateGithubIssueCommand.CreateFeatureSlashCmd,
                 type: 1,
+                name: CreateGithubIssueCommand.CreateFeatureSlashCmd,
                 description: 'Create a feature request',
             },
         },
         {
             config: {
-                name: CreateGithubIssueCommand.CreateBugSlashCmd,
                 type: 1,
+                name: CreateGithubIssueCommand.CreateBugSlashCmd,
                 description: 'Create a bug report',
             },
         },
         {
             config: {
-                name: CreateGithubIssueCommand.CreateFeatureRequest,
                 type: 3,
-            } as ApplicationOptions,
+                name: CreateGithubIssueCommand.CreateFeatureRequest,
+            },
         },
         {
             config: {
-                name: CreateGithubIssueCommand.CreateBug,
                 type: 3,
-            } as ApplicationOptions,
+                name: CreateGithubIssueCommand.CreateBug,
+            },
         },
     ],
     modalSubmitListeners: {
