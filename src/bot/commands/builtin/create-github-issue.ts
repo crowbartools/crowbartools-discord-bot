@@ -1,4 +1,4 @@
-import { ICommandType } from '../../models/command';
+import { ICommandType } from '../../types/command';
 import { capitalize, limitString } from '../../../common/util';
 import {
     getProject,

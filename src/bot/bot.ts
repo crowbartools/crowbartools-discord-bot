@@ -9,23 +9,11 @@ import {
     Client as InteractionClient,
 } from 'discord-slash-commands-client';
 import { ModalSubmitInteraction } from 'discord-modals';
-import { limitString } from '../common/util';
-import NodeCache from 'node-cache';
-
-const autoThreadCooldownCache = new NodeCache({ stdTTL: 30, checkperiod: 30 });
+import { handleAutoThread } from './autothread/autothread-manager';
 
 const BOT_APP_ID = '539509249726873600';
 const CROWBAR_GUILD_ID = '372817064034959370';
-// const CROWBAR_GUILD_ID = '428739554833334274'; // test server
-
-const autoThreadChannels: Record<string, string> = {
-    //questions channel
-    '372818514312167424':
-        "{user} Thanks for dropping by with your question! I've created this thread for follow up messages. We'll get to your question as soon as possible :)",
-    //issues channel
-    '911520084256768050':
-        "{user} Sorry you are having an issue! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get to you as soon as possible :)",
-};
+//const CROWBAR_GUILD_ID = '428739554833334274'; // test server
 
 const myIntents = new Intents();
 myIntents.add(
@@ -48,34 +36,19 @@ export function init(): void {
         BOT_APP_ID
     );
 
-    discordClient.on('messageCreate', async message => {
-        // ignore messages from bots
+    discordClient.on('messageCreate', message => {
         if (message.author.bot) return;
-
         if (message.guildId !== CROWBAR_GUILD_ID) return;
 
-        // ignore messages in threads
-        if (message.channel.isThread()) return;
-
-        const autoThreadMessage = autoThreadChannels[message.channelId];
-        if (autoThreadMessage) {
-            const cooldownCacheKey = `${message.author.id}:${message.channelId}`;
-            if (autoThreadCooldownCache.has(cooldownCacheKey)) return;
-
-            autoThreadCooldownCache.set(cooldownCacheKey, true);
-
-            const thread = await message.startThread({
-                name: limitString(message.content, 30, '...'),
-                autoArchiveDuration: 4320,
-                reason: 'Auto-thread by CrowbarBot',
-            });
-
-            thread.send(
-                autoThreadMessage.replace('{user}', `<@${message.author.id}>`)
-            );
-        }
+        handleAutoThread(message);
     });
 
+    // attach and event listener for the interactionCreate event
+    discordClient.on('interactionCreate', async interaction => {
+        handleInteraction(interaction, discordClient, interactionsClient);
+    });
+
+    /** This is needed to detect the new modal submit interactions */
     discordClient.ws.on('INTERACTION_CREATE', data => {
         if (!data.type) return;
 
@@ -96,17 +69,11 @@ export function init(): void {
         }
     );
 
-    // attach and event listener for the interactionCreate event
-    discordClient.on('interactionCreate', async interaction => {
-        handleInteraction(interaction, discordClient, interactionsClient);
-    });
-
     discordClient.on('ready', async () => {
         console.log(`Logged in as ${discordClient.user.tag}!`);
 
         const registeredCommands = getRegisteredApplicationCommands();
 
-        // cleanup previously registered slash commands
         const knownAppCommands = (await interactionsClient.getCommands({
             guildID: CROWBAR_GUILD_ID,
         })) as ApplicationCommand[];
@@ -120,6 +87,7 @@ export function init(): void {
                 )
         );
 
+        // remove any previously created commands that aren't registered anymore
         for (const command of commandsToRemove) {
             console.log('Attempting to delete command: ', command.name);
             try {
