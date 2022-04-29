@@ -1,5 +1,5 @@
 import { Client, Interaction } from 'discord.js';
-import { ICommandType, IUserCommand } from '../models/command';
+import { ICommandType, IUserCommand } from '../types/command';
 import { Client as InteractionClient } from 'discord-slash-commands-client';
 import { ModalSubmitInteraction } from 'discord-modals';
 

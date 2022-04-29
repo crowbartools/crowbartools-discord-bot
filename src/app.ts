@@ -3,9 +3,9 @@ import * as bot from './bot/bot';
 
 import { registerCommand } from './bot/commands/command-manager';
 // import PingCommand from './bot/commands/types/ping/ping';
-import CreateGHIssueCommand from './bot/commands/types/create-github-issue';
+import CreateGHIssueCommand from './bot/commands/builtin/create-github-issue';
 // import LookupGHIssueCommand from './bot/commands/types/lookup-github-issue';
-import SayCommand from './bot/commands/types/say';
+import SayCommand from './bot/commands/builtin/say';
 
 function verifyEnvironment(): boolean {
     const envResult = dotenv.config();

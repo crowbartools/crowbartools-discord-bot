@@ -1,6 +1,6 @@
 import { MessageEmbed, Message } from 'discord.js';
 import moment from 'moment';
-import { IIssue, ICommitData } from '../models/github';
+import { IIssue, ICommitData } from '../types/github';
 import { DiscordChannels } from './crowbar-helpers';
 import { limitString } from '../../common/util';
 

@@ -1,5 +1,5 @@
 import { TextChannel } from 'discord.js';
-import { ICommandType } from '../../models/command';
+import { ICommandType } from '../../types/command';
 
 const command: ICommandType = {
     applicationCommands: [

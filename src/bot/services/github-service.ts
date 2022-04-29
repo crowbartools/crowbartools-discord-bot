@@ -1,5 +1,11 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { IGetCommitsRequest, ICreateIssueRequest, IIssue, ICommitData, ISearchResult } from '../models/github';
+import {
+    IGetCommitsRequest,
+    ICreateIssueRequest,
+    IIssue,
+    ICommitData,
+    ISearchResult,
+} from '../types/github';
 
 function getDefaultAxiosConfig(): AxiosRequestConfig {
     return {
@@ -13,7 +19,9 @@ function getDefaultAxiosConfig(): AxiosRequestConfig {
     };
 }
 
-export async function createIssue(createIssueRequest: ICreateIssueRequest): Promise<IIssue> {
+export async function createIssue(
+    createIssueRequest: ICreateIssueRequest
+): Promise<IIssue> {
     const createUrl = `https://api.github.com/repos/${createIssueRequest.repo}/issues`;
     const body = {
         title: createIssueRequest.title,
@@ -35,7 +43,10 @@ export async function createIssue(createIssueRequest: ICreateIssueRequest): Prom
     return null;
 }
 
-export async function searchIssues(repo: string, search: string): Promise<IIssue[]> {
+export async function searchIssues(
+    repo: string,
+    search: string
+): Promise<IIssue[]> {
     if (repo == null) {
         return null;
     }
@@ -47,11 +58,16 @@ export async function searchIssues(repo: string, search: string): Promise<IIssue
         query = query.substring(0, 255);
     }
 
-    const searchUrl = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}`;
+    const searchUrl = `https://api.github.com/search/issues?q=${encodeURIComponent(
+        query
+    )}`;
 
     let response: AxiosResponse<ISearchResult>;
     try {
-        response = await axios.get<ISearchResult>(searchUrl, getDefaultAxiosConfig());
+        response = await axios.get<ISearchResult>(
+            searchUrl,
+            getDefaultAxiosConfig()
+        );
     } catch (error) {
         console.log('Error searching github issues', error);
     }
@@ -63,7 +79,10 @@ export async function searchIssues(repo: string, search: string): Promise<IIssue
     return null;
 }
 
-export async function getIssue(repo: string, issueNumber: number): Promise<IIssue> {
+export async function getIssue(
+    repo: string,
+    issueNumber: number
+): Promise<IIssue> {
     if (repo == null || issueNumber == null) {
         return null;
     }
@@ -72,7 +91,10 @@ export async function getIssue(repo: string, issueNumber: number): Promise<IIssu
 
     let response: AxiosResponse<IIssue>;
     try {
-        response = await axios.get<IIssue>(getIssueUrl, getDefaultAxiosConfig());
+        response = await axios.get<IIssue>(
+            getIssueUrl,
+            getDefaultAxiosConfig()
+        );
     } catch (error) {
         console.log('Error getting github issue', error);
     }
@@ -84,14 +106,19 @@ export async function getIssue(repo: string, issueNumber: number): Promise<IIssu
     return null;
 }
 
-export async function getRecentCommits(getCommitsRequest: IGetCommitsRequest): Promise<ICommitData[]> {
+export async function getRecentCommits(
+    getCommitsRequest: IGetCommitsRequest
+): Promise<ICommitData[]> {
     let commitsUrl = `https://api.github.com/repos/${getCommitsRequest.branch}/commits`;
     commitsUrl += `?sha=${getCommitsRequest.branch}`;
     commitsUrl += `&since=${getCommitsRequest.sinceDateString}`;
 
     let response: AxiosResponse<ICommitData[]>;
     try {
-        response = await axios.get<ICommitData[]>(commitsUrl, getDefaultAxiosConfig());
+        response = await axios.get<ICommitData[]>(
+            commitsUrl,
+            getDefaultAxiosConfig()
+        );
     } catch (error) {
         console.log('Error getting recent commit messages', error);
     }
