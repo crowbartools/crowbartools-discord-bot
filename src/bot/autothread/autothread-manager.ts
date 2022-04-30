@@ -22,13 +22,13 @@ const autoThreadCooldownCache = new NodeCache({ stdTTL: 30, checkperiod: 30 });
 const autoThreadChannels: Record<string, string> = {
     //questions channel
     '372818514312167424':
-        "{user} Thanks for dropping by with your question! I've created this thread for follow up messages. We'll get back to you as soon as possible",
+        "Thanks for dropping by with your question, {user}! I've created this thread for follow up messages. We'll get back to you as soon as possible :slight_smile:",
     //issues channel
     '911520084256768050':
-        "{user} Sorry you are having an issue! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get back to you as soon as possible",
+        "Sorry you are having an issue, {user}! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get back to you as soon as possible :slight_smile:",
     //test channel
     '844947380272627712':
-        "Sorry you are having an issue, {user}! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get back to you as soon as possible",
+        "Sorry you are having an issue, {user}! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get back to you as soon as possible :slight_smile:",
 };
 
 export async function handleAutoThread(message: Message): Promise<void> {
