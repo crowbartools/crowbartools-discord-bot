@@ -1,4 +1,11 @@
-import { Message } from 'discord.js';
+import {
+    ButtonInteraction,
+    GuildMemberRoleManager,
+    Message,
+    MessageActionRow,
+    MessageButton,
+    MessageEmbed,
+} from 'discord.js';
 import NodeCache from 'node-cache';
 import { limitString } from '../../common/util';
 
@@ -15,12 +22,13 @@ const autoThreadCooldownCache = new NodeCache({ stdTTL: 30, checkperiod: 30 });
 const autoThreadChannels: Record<string, string> = {
     //questions channel
     '372818514312167424':
-        "{user} Thanks for dropping by with your question! I've created this thread for follow up messages. We'll get to your question as soon as possible :)",
+        "{user} Thanks for dropping by with your question! I've created this thread for follow up messages. We'll get back to you as soon as possible",
     //issues channel
     '911520084256768050':
-        "{user} Sorry you are having an issue! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get to you as soon as possible :)",
+        "{user} Sorry you are having an issue! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get back to you as soon as possible",
     //test channel
-    '844947380272627712': '{user} Test reply',
+    '844947380272627712':
+        "Sorry you are having an issue, {user}! I've created this thread for follow up messages. Any steps to reproduce and/or screenshots (if applicable) will be really helpful! We'll get back to you as soon as possible",
 };
 
 export async function handleAutoThread(message: Message): Promise<void> {
@@ -48,8 +56,83 @@ export async function handleAutoThread(message: Message): Promise<void> {
             reason: 'Auto-thread by CrowbarBot',
         });
 
-        thread.send(
-            autoThreadMessage.replace('{user}', `<@${message.author.id}>`)
+        const row = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setCustomId('keepThread')
+                .setLabel('✅ Keep thread')
+                .setStyle('SECONDARY'),
+            new MessageButton()
+                .setCustomId('removeThread')
+                .setLabel('⛔ Remove thread')
+                .setStyle('SECONDARY')
+        );
+
+        const autoReply = await thread.send({
+            embeds: [
+                new MessageEmbed()
+                    .setColor('BLUE')
+                    .setDescription(
+                        autoThreadMessage.replace(
+                            '{user}',
+                            message.author.username
+                        )
+                    ),
+                new MessageEmbed()
+                    .setColor('DARK_GREY')
+                    .addField(
+                        "Don't need this thread?",
+                        '*Let me know with the buttons below*'
+                    ),
+            ],
+            components: [row],
+        });
+
+        setTimeout(async () => {
+            try {
+                const updatedReply = await autoReply.fetch(true);
+                if (updatedReply.editable && updatedReply.embeds.length === 2) {
+                    updatedReply.edit({
+                        embeds: [updatedReply.embeds[0]],
+                        components: [],
+                    });
+                }
+            } catch {
+                //fail silently
+            }
+        }, 30000);
+    }
+}
+
+export async function handleThreadButtonPress(
+    interaction: ButtonInteraction
+): Promise<void> {
+    if (!interaction.channel.isThread()) {
+        return;
+    }
+    const hasIgnoreRole = (interaction.member
+        .roles as GuildMemberRoleManager).cache.some(c =>
+        IGNORE_ROLES.includes(c.id)
+    );
+    const starterMessage = await interaction.channel.fetchStarterMessage();
+    const hasPermission =
+        starterMessage.author.id === interaction.user.id || hasIgnoreRole;
+
+    if (!hasPermission) {
+        interaction.reply({
+            content: "You don't have permission to do this.",
+            ephemeral: true,
+        });
+        return;
+    }
+
+    if (interaction.customId === 'keepThread') {
+        interaction.update({
+            embeds: [interaction.message.embeds[0] as MessageEmbed],
+            components: [],
+        });
+    } else if (interaction.customId === 'removeThread') {
+        interaction.channel.delete(
+            `${interaction.user.username} marked thread as unneeded.`
         );
     }
 }

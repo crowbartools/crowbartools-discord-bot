@@ -9,7 +9,10 @@ import {
     Client as InteractionClient,
 } from 'discord-slash-commands-client';
 import { ModalSubmitInteraction } from 'discord-modals';
-import { handleAutoThread } from './autothread/autothread-manager';
+import {
+    handleAutoThread,
+    handleThreadButtonPress,
+} from './autothread/autothread-manager';
 
 const BOT_APP_ID = '539509249726873600';
 const CROWBAR_GUILD_ID = '372817064034959370';
@@ -45,7 +48,11 @@ export function init(): void {
 
     // attach and event listener for the interactionCreate event
     discordClient.on('interactionCreate', async interaction => {
-        handleInteraction(interaction, discordClient, interactionsClient);
+        if (interaction.isButton()) {
+            handleThreadButtonPress(interaction);
+        } else {
+            handleInteraction(interaction, discordClient, interactionsClient);
+        }
     });
 
     /** This is needed to detect the new modal submit interactions */
@@ -71,6 +78,11 @@ export function init(): void {
 
     discordClient.on('ready', async () => {
         console.log(`Logged in as ${discordClient.user.tag}!`);
+
+        discordClient.user.setActivity({
+            name: 'Firebot',
+            type: 'STREAMING',
+        });
 
         const registeredCommands = getRegisteredApplicationCommands();
 
