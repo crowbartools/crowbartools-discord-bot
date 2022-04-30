@@ -80,8 +80,9 @@ export function init(): void {
         console.log(`Logged in as ${discordClient.user.tag}!`);
 
         discordClient.user.setActivity({
-            name: 'Firebot',
+            name: 'with Firebot',
             type: 'STREAMING',
+            url: 'https://www.twitch.tv/firebottletv',
         });
 
         const registeredCommands = getRegisteredApplicationCommands();
