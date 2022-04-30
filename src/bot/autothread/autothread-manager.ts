@@ -106,33 +106,37 @@ export async function handleAutoThread(message: Message): Promise<void> {
 export async function handleThreadButtonPress(
     interaction: ButtonInteraction
 ): Promise<void> {
-    if (!interaction.channel.isThread()) {
-        return;
-    }
-    const hasIgnoreRole = (interaction.member
-        .roles as GuildMemberRoleManager).cache.some(c =>
-        IGNORE_ROLES.includes(c.id)
-    );
-    const starterMessage = await interaction.channel.fetchStarterMessage();
-    const hasPermission =
-        starterMessage.author.id === interaction.user.id || hasIgnoreRole;
-
-    if (!hasPermission) {
-        interaction.reply({
-            content: "You don't have permission to do this.",
-            ephemeral: true,
-        });
-        return;
-    }
-
-    if (interaction.customId === 'keepThread') {
-        interaction.update({
-            embeds: [interaction.message.embeds[0] as MessageEmbed],
-            components: [],
-        });
-    } else if (interaction.customId === 'removeThread') {
-        interaction.channel.delete(
-            `${interaction.user.username} marked thread as unneeded.`
+    try {
+        if (!interaction.channel.isThread()) {
+            return;
+        }
+        const hasIgnoreRole = (interaction.member
+            .roles as GuildMemberRoleManager).cache.some(c =>
+            IGNORE_ROLES.includes(c.id)
         );
+        const starterMessage = await interaction.channel.fetchStarterMessage();
+        const hasPermission =
+            starterMessage.author.id === interaction.user.id || hasIgnoreRole;
+
+        if (!hasPermission) {
+            interaction.reply({
+                content: "You don't have permission to do this.",
+                ephemeral: true,
+            });
+            return;
+        }
+
+        if (interaction.customId === 'keepThread') {
+            await (interaction.message as Message).edit({
+                embeds: [interaction.message.embeds[0] as MessageEmbed],
+                components: [],
+            });
+        } else if (interaction.customId === 'removeThread') {
+            await interaction.channel.delete(
+                `${interaction.user.username} marked thread as unneeded.`
+            );
+        }
+    } catch (error) {
+        console.log('failed to handle button press');
     }
 }
