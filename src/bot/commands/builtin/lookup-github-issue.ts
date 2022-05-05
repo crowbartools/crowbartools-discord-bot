@@ -31,14 +31,25 @@ const command: ICommandType = {
     ],
     async handleInteraction(interaction) {
         if (interaction.isAutocomplete()) {
-            const search = interaction.options.getString('search');
-            const issues = await searchIssues('crowbartools/Firebot', search);
-            await interaction.respond(
-                issues.map(i => ({
-                    name: limitString(`#${i.number}: ${i.title}`, 60, '...'),
-                    value: i.number.toString(),
-                }))
-            );
+            try {
+                const search = interaction.options.getString('search');
+                const issues = await searchIssues(
+                    'crowbartools/Firebot',
+                    search
+                );
+                await interaction.respond(
+                    issues.map(i => ({
+                        name: limitString(
+                            `#${i.number}: ${i.title}`,
+                            60,
+                            '...'
+                        ),
+                        value: i.number.toString(),
+                    }))
+                );
+            } catch {
+                // fail silently
+            }
             return;
         } else if (interaction.isCommand()) {
             await interaction.deferReply();
