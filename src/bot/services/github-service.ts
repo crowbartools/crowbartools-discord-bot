@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+
 import {
     IGetCommitsRequest,
     ICreateIssueRequest,
@@ -58,7 +59,7 @@ export async function searchIssues(
         query = query.substring(0, 255);
     }
 
-    const searchUrl = `https://api.github.com/search/issues?q=${encodeURIComponent(
+    const searchUrl = `https://api.github.com/search/issues?per_page=10&q=${encodeURIComponent(
         query
     )}`;
 

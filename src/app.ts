@@ -4,8 +4,8 @@ import * as bot from './bot/bot';
 import { registerCommand } from './bot/commands/command-manager';
 // import PingCommand from './bot/commands/types/ping/ping';
 import CreateGHIssueCommand from './bot/commands/builtin/create-github-issue';
-// import LookupGHIssueCommand from './bot/commands/types/lookup-github-issue';
-import SayCommand from './bot/commands/builtin/say';
+import LookupGHIssueCommand from './bot/commands/builtin/lookup-github-issue';
+//import SayCommand from './bot/commands/builtin/say';
 
 function verifyEnvironment(): boolean {
     const envResult = dotenv.config();
@@ -35,8 +35,8 @@ function start(): void {
     // register our command types
     // registerCommand(PingCommand);
     registerCommand(CreateGHIssueCommand);
-    // registerCommand(LookupGHIssueCommand);
-    registerCommand(SayCommand);
+    registerCommand(LookupGHIssueCommand);
+    //registerCommand(SayCommand);
 
     // connect to discord
     bot.init();

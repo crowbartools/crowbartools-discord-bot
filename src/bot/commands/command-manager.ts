@@ -46,7 +46,13 @@ export function handleInteraction(
     discordClient: Client,
     interactionClient: InteractionClient
 ): void {
-    if (!(interaction.isContextMenu() || interaction.isCommand())) {
+    if (
+        !(
+            interaction.isContextMenu() ||
+            interaction.isCommand() ||
+            interaction.isAutocomplete()
+        )
+    ) {
         return;
     }
 
