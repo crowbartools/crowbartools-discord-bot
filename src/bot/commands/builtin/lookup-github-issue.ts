@@ -1,9 +1,9 @@
 import { ICommandType } from '../../types/command';
 import {
-    issueHelpEmbed,
+    //issueHelpEmbed,
     buildIssueEmbed,
-    buildIssueSearchEmbed,
-    getDefaultProjectName,
+    //buildIssueSearchEmbed,
+    //getDefaultProjectName,
     getProject,
 } from '../../helpers/github-helpers';
 import { getIssue, searchIssues } from '../../services/github-service';
