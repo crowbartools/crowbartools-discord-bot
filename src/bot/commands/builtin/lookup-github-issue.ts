@@ -69,7 +69,7 @@ const command: ICommandType = {
                 });
                 return;
             } else {
-                await interaction.editReply("Couldn't find an issue! :(");
+                await interaction.editReply("Couldn't find an issue!");
             }
         }
     },
