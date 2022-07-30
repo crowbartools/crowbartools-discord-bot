@@ -9,6 +9,7 @@ import { searchIssues, createIssue } from '../../services/github-service';
 import {
     Modal,
     ModalSubmitInteraction,
+    SelectMenuComponent,
     TextInputComponent,
 } from 'discord-modals';
 
@@ -141,11 +142,12 @@ const command: ICommandType = {
         },
     ],
     modalSubmitListeners: {
-        createBug: async interaction => {
-            handleCreateIssueModalSubmit(interaction, 'bug');
-        },
-        createFeature: async interaction => {
-            handleCreateIssueModalSubmit(interaction, 'feature');
+        createIssue: interaction => {
+            handleCreateIssueModalSubmit(
+                interaction,
+                interaction.selectMenus.find(s => s.customId === 'type')
+                    ?.values[0]
+            );
         },
     },
     async handleInteraction(interaction, _discordClient, interactionClient) {
@@ -153,22 +155,16 @@ const command: ICommandType = {
             return;
         }
 
-        let modalType: string;
-        let modalTitle: string;
+        let preselectType = false;
+        let isBug = false;
 
         let title = '';
         let description = '';
 
         if (interaction.isContextMenu()) {
-            modalType =
-                interaction.commandName === CreateGithubIssueCommand.CreateBug
-                    ? 'createBug'
-                    : 'createFeature';
-
-            modalTitle =
-                interaction.commandName === CreateGithubIssueCommand.CreateBug
-                    ? 'Create Bug Report'
-                    : 'Create Feature Request';
+            isBug =
+                interaction.commandName === CreateGithubIssueCommand.CreateBug;
+            preselectType = true;
 
             const message = interaction.options.getMessage('message');
 
@@ -176,23 +172,43 @@ const command: ICommandType = {
 
             description = `**Original Discord message by ${message.author.username}:**\n${message.content}\n\n> Issue created by ${interaction.user.username} via Discord`;
         } else {
-            modalType =
+            isBug =
                 interaction.commandName ===
-                CreateGithubIssueCommand.CreateBugSlashCmd
-                    ? 'createBug'
-                    : 'createFeature';
-
-            modalTitle =
-                interaction.commandName ===
-                CreateGithubIssueCommand.CreateBugSlashCmd
-                    ? 'Create Bug Report'
-                    : 'Create Feature Request';
+                CreateGithubIssueCommand.CreateBugSlashCmd;
+            preselectType = true;
         }
 
         const createModal = new Modal()
-            .setCustomId(modalType)
-            .setTitle(modalTitle)
+            .setCustomId('createIssue')
+            .setTitle('Create New Issue')
             .addComponents(
+                new SelectMenuComponent()
+                    .setCustomId('type')
+                    .setMinValues(1)
+                    .setMaxValues(1)
+                    .setPlaceholder('Select issue type')
+                    .addOptions(
+                        {
+                            label: 'Feature',
+                            description: 'A new enhancement or functionality',
+                            value: 'feature',
+                            emoji: {
+                                id: null,
+                                name: '✨',
+                            },
+                            default: preselectType && !isBug,
+                        },
+                        {
+                            label: 'Bug',
+                            description: 'An error or unexpected behavior',
+                            value: 'bug',
+                            emoji: {
+                                id: null,
+                                name: '🪲',
+                            },
+                            default: preselectType && isBug,
+                        }
+                    ) as any,
                 new TextInputComponent()
                     .setCustomId('title')
                     .setLabel('Title')

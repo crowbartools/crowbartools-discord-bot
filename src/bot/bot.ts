@@ -15,8 +15,8 @@ import {
 } from './autothread/autothread-manager';
 
 const BOT_APP_ID = '539509249726873600';
-const CROWBAR_GUILD_ID = '372817064034959370';
-//const CROWBAR_GUILD_ID = '428739554833334274'; // test server
+//const CROWBAR_GUILD_ID = '372817064034959370';
+const CROWBAR_GUILD_ID = '428739554833334274'; // test server
 
 const myIntents = new Intents();
 myIntents.add(
