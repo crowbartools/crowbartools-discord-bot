@@ -189,8 +189,8 @@ const command: ICommandType = {
                     .setPlaceholder('Select issue type')
                     .addOptions(
                         {
-                            label: 'Feature',
-                            description: 'A new enhancement or functionality',
+                            label: 'Feature Request',
+                            description: 'New functionality or an enhancement',
                             value: 'feature',
                             emoji: {
                                 id: null,
@@ -199,7 +199,7 @@ const command: ICommandType = {
                             default: preselectType && !isBug,
                         },
                         {
-                            label: 'Bug',
+                            label: 'Bug Report',
                             description: 'An error or unexpected behavior',
                             value: 'bug',
                             emoji: {
