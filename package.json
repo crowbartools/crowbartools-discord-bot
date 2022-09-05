@@ -1,6 +1,6 @@
 {
     "name": "crowbartools-discord-bot",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A bot that helps service the Crowbar Tools Discord server.",
     "main": "dist/app.js",
     "dependencies": {
