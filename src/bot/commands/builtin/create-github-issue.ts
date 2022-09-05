@@ -142,12 +142,11 @@ const command: ICommandType = {
         },
     ],
     modalSubmitListeners: {
-        createIssue: interaction => {
-            handleCreateIssueModalSubmit(
-                interaction,
-                interaction.selectMenus.find(s => s.customId === 'type')
-                    ?.values[0]
-            );
+        createBug: async interaction => {
+            handleCreateIssueModalSubmit(interaction, 'bug');
+        },
+        createFeature: async interaction => {
+            handleCreateIssueModalSubmit(interaction, 'feature');
         },
     },
     async handleInteraction(interaction, _discordClient, interactionClient) {
@@ -155,16 +154,22 @@ const command: ICommandType = {
             return;
         }
 
-        let preselectType = false;
-        let isBug = false;
+        let modalType: string;
+        let modalTitle: string;
 
         let title = '';
         let description = '';
 
         if (interaction.isContextMenu()) {
-            isBug =
-                interaction.commandName === CreateGithubIssueCommand.CreateBug;
-            preselectType = true;
+            modalType =
+                interaction.commandName === CreateGithubIssueCommand.CreateBug
+                    ? 'createBug'
+                    : 'createFeature';
+
+            modalTitle =
+                interaction.commandName === CreateGithubIssueCommand.CreateBug
+                    ? 'Create Bug Report'
+                    : 'Create Feature Request';
 
             const message = interaction.options.getMessage('message');
 
@@ -172,43 +177,50 @@ const command: ICommandType = {
 
             description = `**Original Discord message by ${message.author.username}:**\n${message.content}\n\n> Issue created by ${interaction.user.username} via Discord`;
         } else {
-            isBug =
+            modalType =
                 interaction.commandName ===
-                CreateGithubIssueCommand.CreateBugSlashCmd;
-            preselectType = true;
+                CreateGithubIssueCommand.CreateBugSlashCmd
+                    ? 'createBug'
+                    : 'createFeature';
+
+            modalTitle =
+                interaction.commandName ===
+                CreateGithubIssueCommand.CreateBugSlashCmd
+                    ? 'Create Bug Report'
+                    : 'Create Feature Request';
         }
 
         const createModal = new Modal()
-            .setCustomId('createIssue')
-            .setTitle('Create New Issue')
+            .setCustomId(modalType)
+            .setTitle(modalTitle)
             .addComponents(
-                new SelectMenuComponent()
-                    .setCustomId('type')
-                    .setMinValues(1)
-                    .setMaxValues(1)
-                    .setPlaceholder('Select issue type')
-                    .addOptions(
-                        {
-                            label: 'Feature Request',
-                            description: 'New functionality or an enhancement',
-                            value: 'feature',
-                            emoji: {
-                                id: null,
-                                name: '✨',
-                            },
-                            default: preselectType && !isBug,
-                        },
-                        {
-                            label: 'Bug Report',
-                            description: 'An error or unexpected behavior',
-                            value: 'bug',
-                            emoji: {
-                                id: null,
-                                name: '🪲',
-                            },
-                            default: preselectType && isBug,
-                        }
-                    ) as any,
+                // new SelectMenuComponent()
+                //     .setCustomId('type')
+                //     .setMinValues(1)
+                //     .setMaxValues(1)
+                //     .setPlaceholder('Select issue type')
+                //     .addOptions(
+                //         {
+                //             label: 'Feature Request',
+                //             description: 'New functionality or an enhancement',
+                //             value: 'feature',
+                //             emoji: {
+                //                 id: null,
+                //                 name: '✨',
+                //             },
+                //             default: preselectType && !isBug,
+                //         },
+                //         {
+                //             label: 'Bug Report',
+                //             description: 'An error or unexpected behavior',
+                //             value: 'bug',
+                //             emoji: {
+                //                 id: null,
+                //                 name: '🪲',
+                //             },
+                //             default: preselectType && isBug,
+                //         }
+                //     ) as any,
                 new TextInputComponent()
                     .setCustomId('title')
                     .setLabel('Title')
