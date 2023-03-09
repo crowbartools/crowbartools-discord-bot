@@ -57,6 +57,7 @@ export function init(): void {
 
     /** This is needed to detect the new modal submit interactions */
     discordClient.ws.on('INTERACTION_CREATE', data => {
+        console.log(data);
         if (!data.type) return;
 
         switch (data.type) {
@@ -72,6 +73,7 @@ export function init(): void {
     discordClient.on(
         'modalSubmit',
         async (interaction: ModalSubmitInteraction) => {
+            console.log('it happened');
             handleModalSubmit(interaction);
         }
     );

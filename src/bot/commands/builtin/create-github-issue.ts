@@ -154,6 +154,7 @@ const command: ICommandType = {
             return;
         }
 
+        let preselectType = false;
         let modalType: string;
         let modalTitle: string;
 
@@ -161,6 +162,7 @@ const command: ICommandType = {
         let description = '';
 
         if (interaction.isContextMenu()) {
+            preselectType = false;
             modalType =
                 interaction.commandName === CreateGithubIssueCommand.CreateBug
                     ? 'createBug'
@@ -189,6 +191,8 @@ const command: ICommandType = {
                     ? 'Create Bug Report'
                     : 'Create Feature Request';
         }
+
+        const isBug = modalType === 'createBug';
 
         const createModal = new Modal()
             .setCustomId(modalType)
@@ -228,7 +232,7 @@ const command: ICommandType = {
                     .setMinLength(5)
                     .setMaxLength(100)
                     .setPlaceholder('Enter title')
-                    .setDefaultValue(title)
+                    // .setDefaultValue(title)
                     .setRequired(true),
                 new TextInputComponent()
                     .setCustomId('description')
@@ -236,11 +240,18 @@ const command: ICommandType = {
                     .setStyle('LONG')
                     .setMinLength(5)
                     .setMaxLength(2000)
-                    .setDefaultValue(description)
+                    // .setDefaultValue(description)
                     .setPlaceholder('Enter description')
             );
 
-        interactionClient.showModal(interaction, createModal.toJSON());
+        try {
+            await interactionClient.showModal(
+                interaction,
+                createModal.toJSON()
+            );
+        } catch (error) {
+            console.log(error);
+        }
     },
 };
 
