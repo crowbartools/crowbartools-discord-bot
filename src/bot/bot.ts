@@ -13,6 +13,7 @@ import {
     handleAutoThread,
     handleThreadButtonPress,
 } from './autothread/autothread-manager';
+import { ActivityTypes } from 'discord.js/typings/enums';
 
 const BOT_APP_ID = '539509249726873600';
 const CROWBAR_GUILD_ID = '372817064034959370';
@@ -82,9 +83,8 @@ export function init(): void {
         console.log(`Logged in as ${discordClient.user.tag}!`);
 
         discordClient.user.setActivity({
-            name: 'with Firebot',
-            type: 'STREAMING',
-            url: 'https://www.twitch.tv/firebottletv',
+            name: 'Firebot Streams',
+            type: ActivityTypes.WATCHING,
         });
 
         const registeredCommands = getRegisteredApplicationCommands();
