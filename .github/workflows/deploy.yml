@@ -12,7 +12,7 @@ jobs:
     deploy:
         name: Deploy Bot
         runs-on: 'ubuntu-latest'
-        if: github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
         steps:
             - name: SSH Remote Commands
               uses: appleboy/ssh-action@v0.1.4
