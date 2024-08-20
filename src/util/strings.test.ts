@@ -1,4 +1,4 @@
-import { capitalize, limitString } from './util';
+import { capitalize, limitString } from './strings';
 
 test('should captialize first letter and lowercase the rest', () => {
     const input = 'teSt';

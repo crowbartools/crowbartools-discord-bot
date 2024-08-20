@@ -1,17 +1,16 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es2020",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "noImplicitAny": false
-  },
-  "lib": ["ES2020"],
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts"]
+    "compilerOptions": {
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "ES2022",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "noImplicitAny": false
+    },
+    "lib": ["ES2022"],
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts"]
 }

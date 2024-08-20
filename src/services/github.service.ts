@@ -6,13 +6,15 @@ import {
     IIssue,
     ICommitData,
     ISearchResult,
+    IRelease,
 } from '../types/github';
+import { config } from '../config';
 
 function getDefaultAxiosConfig(): AxiosRequestConfig {
     return {
         auth: {
-            username: process.env.GITHUB_USER,
-            password: process.env.GITHUB_TOKEN,
+            username: config.github.user,
+            password: config.github.token,
         },
         headers: {
             'User-Agent': 'crowbartools/crowbartools-discord-bot',
@@ -126,6 +128,27 @@ export async function getRecentCommits(
 
     if (response && response.status == 200) {
         return response.data;
+    }
+
+    return null;
+}
+
+export async function getLatestFirebotReleaseVersion(): Promise<string | null> {
+    const getLatestReleaseUrl =
+        'https://api.github.com/repos/crowbartools/firebot/releases/latest';
+
+    let response: AxiosResponse<IRelease>;
+    try {
+        response = await axios.get<IRelease>(
+            getLatestReleaseUrl,
+            getDefaultAxiosConfig()
+        );
+    } catch (error) {
+        console.log('Error getting latest firebot release', error);
+    }
+
+    if (response && response.status == 200) {
+        return response.data?.tag_name;
     }
 
     return null;
