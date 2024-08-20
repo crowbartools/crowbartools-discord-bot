@@ -7,7 +7,7 @@ import {
 import { limitString } from '../../../util/strings';
 
 const config = new ContextMenuCommandBuilder()
-    .setName('Submit as Bug')
+    .setName('Submit as Bug Report')
     .setType(ApplicationCommandType.Message);
 
 export const submitBugContextMenuCommand: ICommandHandler = {

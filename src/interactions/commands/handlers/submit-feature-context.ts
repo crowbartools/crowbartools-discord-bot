@@ -7,7 +7,7 @@ import {
 import { limitString } from '../../../util/strings';
 
 const config = new ContextMenuCommandBuilder()
-    .setName('Submit as Feature')
+    .setName('Submit as Feature Request')
     .setType(ApplicationCommandType.Message);
 
 export const submitFeatureContextMenuCommand: ICommandHandler = {
