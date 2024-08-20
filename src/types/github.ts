@@ -47,3 +47,7 @@ export interface ISearchResult {
     incomplete_results: boolean;
     items: IIssue[];
 }
+
+export interface IRelease {
+    tag_name: string;
+}
