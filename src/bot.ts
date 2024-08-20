@@ -20,11 +20,12 @@ const discordClient = new Client({
     ],
     partials: [Partials.Message, Partials.Channel, Partials.User],
     presence: {
-        status: 'dnd',
+        status: 'online',
         activities: [
             {
-                name: 'Firebot Streams',
-                type: ActivityType.Watching,
+                name: 'Firebot',
+                type: ActivityType.Custom,
+                state: 'Stream with Firebot 🔥',
             },
         ],
     },
