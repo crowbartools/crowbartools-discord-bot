@@ -107,16 +107,27 @@ export async function sendMessageToChannel(
         reason: `Thread for ${channelLabel}`,
     });
 
-    const thread = await message.startThread({
-        name: `Sent to #${channelLabel}`,
-        autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
-    });
 
-    await thread.send({
-        content: `Hi there! Your message has been sent to the #${channelLabel} channel. Please continue the conversation there:\n${createdForumPost.url}`,
-    });
+    const informUserMessage = `Hi there! Your message has been sent to the #${channelLabel} channel. Please continue the conversation there:\n${createdForumPost.url}`;
 
-    await thread.setLocked(true, `Message sent to #${channelLabel}`);
+    // If the original message was in a thread, reply to it instead of creating a new thread
+    if (message.channel.isThread()) {
+        await message.reply({
+            content: informUserMessage,
+            allowedMentions: { repliedUser: true },
+        });
+    } else {
+        const thread = await message.startThread({
+            name: `Sent to #${channelLabel}`,
+            autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
+        });
+
+        await thread.send({
+            content: informUserMessage,
+        });
+
+        await thread.setLocked(true, `Message sent to #${channelLabel}`);
+    }   
 
     await interaction.editReply({
         content: `Success! View the post [here](${createdForumPost.url}).`,
