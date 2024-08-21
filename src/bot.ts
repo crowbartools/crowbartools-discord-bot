@@ -11,6 +11,7 @@ import { config } from './config';
 import { commandManager } from './interactions/commands/command-manager';
 import { modalManager } from './interactions/modals/modal-manager';
 import { IInteractionManager } from './interactions/interaction-manager.interface';
+import { messageComponentManager } from './interactions/message-components/message-component.manager';
 
 const discordClient = new Client({
     intents: [
@@ -34,6 +35,7 @@ const discordClient = new Client({
 const interactionManagers: IInteractionManager[] = [
     commandManager,
     modalManager,
+    messageComponentManager,
 ];
 
 export async function init(): Promise<void> {

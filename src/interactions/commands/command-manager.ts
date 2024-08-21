@@ -15,6 +15,9 @@ import { submitBugContextMenuCommand } from './handlers/submit-bug-context';
 import { submitFeatureContextMenuCommand } from './handlers/submit-feature-context';
 import { lookupIssueSlashCommand } from './handlers/lookup-issue-slash';
 import { saySlashCommand } from './handlers/say-slash';
+import { sendToQuestionsContextMenuCommand } from './handlers/send-to-questions-context';
+import { sendToIssuesContextMenuCommand } from './handlers/send-to-issues-context';
+import { randomFeaturedSlashCommand } from './handlers/random-featured-slash';
 
 class CommandManager implements IInteractionManager {
     private handlers: ICommandHandler[] = [];
@@ -32,6 +35,9 @@ class CommandManager implements IInteractionManager {
             submitBugContextMenuCommand,
             lookupIssueSlashCommand,
             saySlashCommand,
+            sendToIssuesContextMenuCommand,
+            sendToQuestionsContextMenuCommand,
+            randomFeaturedSlashCommand,
         ];
 
         for (const handler of commandsToRegister) {
