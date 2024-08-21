@@ -18,11 +18,18 @@ function getClient() {
     return client;
 }
 
-export async function getForumTitle(message: string): Promise<string> {
+export async function getForumTitle(
+    message: string,
+    isQuestion?: boolean
+): Promise<string> {
     const client = getClient();
 
     if (!client) {
         return trimTextForTitle(message);
+    }
+
+    if (message.length > 300) {
+        message = limitString(message, 300);
     }
 
     try {
@@ -30,8 +37,7 @@ export async function getForumTitle(message: string): Promise<string> {
             messages: [
                 {
                     role: 'system',
-                    content:
-                        'You summarize Discord chat messages about a live streaming app called Firebot. You must turn the message into something suitable as a forum post title in the form of a question. It must be 100 characters or less. Do not wrap with quotes, or use emojis, or include mentioned users / channels. Do not use title capitalization rules, write it like a normal sentence with grammar cleaned up and corrected. Only the F in Firebot is capitalized. Only reply with the summary and nothing else.',
+                    content: `You summarize Discord chat messages about a live streaming app called Firebot. You must turn the message into something suitable as a forum post title${isQuestion ? ' in the form of a question' : ''}. It must be 100 characters or less. Do not wrap with quotes, or use emojis, or include mentioned users / channels. Do not use title capitalization rules, write it like a normal sentence with grammar cleaned up and corrected. Only the F in Firebot is capitalized. Only reply with the summary and nothing else.`,
                 },
                 { role: 'user', content: message },
             ],
@@ -47,5 +53,8 @@ export async function getForumTitle(message: string): Promise<string> {
 }
 
 function trimTextForTitle(message: string): string {
+    if (message.length <= 100) {
+        return message;
+    }
     return limitString(message, 97, '...');
 }

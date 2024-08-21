@@ -23,7 +23,7 @@ const ACTION_ROW = new ActionRowBuilder().addComponents(
 export async function sendMessageToChannel(
     interaction: MessageContextMenuCommandInteraction,
     channelId: string,
-    channelLabel: string
+    channelLabel: 'questions' | 'issues'
 ) {
     const destinationChannel = interaction.client.channels.cache.get(channelId);
 
@@ -85,7 +85,10 @@ export async function sendMessageToChannel(
         components: [],
     });
 
-    const title = await getForumTitle(message.content);
+    const title = await getForumTitle(
+        message.content,
+        channelLabel === 'questions'
+    );
     const createdForumPost = await destinationChannel.threads.create({
         name: title,
         message: {
