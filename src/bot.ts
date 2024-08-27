@@ -67,17 +67,21 @@ export async function init(): Promise<void> {
             }
 
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({
-                    content:
-                        'Sorry, there was a problem with this command - please let the Crowbar team know.',
-                    ephemeral: true,
-                });
+                interaction
+                    .followUp({
+                        content:
+                            'Sorry, there was a problem with this command - please let the Crowbar team know.',
+                        ephemeral: true,
+                    })
+                    .catch(console.error);
             } else {
-                await interaction.reply({
-                    content:
-                        'Sorry, there was a problem with this command - please let the Crowbar team know.',
-                    ephemeral: true,
-                });
+                interaction
+                    .reply({
+                        content:
+                            'Sorry, there was a problem with this command - please let the Crowbar team know.',
+                        ephemeral: true,
+                    })
+                    .catch(console.error);
             }
         }
     });

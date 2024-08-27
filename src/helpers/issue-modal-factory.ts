@@ -10,8 +10,8 @@ import { getLatestFirebotReleaseVersion } from '../services/github.service';
 import { createModalId } from './modal-id-parser';
 
 export enum IssueModalType {
-    SubmitFeature = 'submit-feature',
-    SubmitBug = 'submit-bug',
+    SubmitFeature = 'sf',
+    SubmitBug = 'sb',
 }
 
 type ModalDetails = {
