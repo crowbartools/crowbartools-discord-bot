@@ -18,6 +18,7 @@ import { saySlashCommand } from './handlers/say-slash';
 import { sendToQuestionsContextMenuCommand } from './handlers/send-to-questions-context';
 import { sendToIssuesContextMenuCommand } from './handlers/send-to-issues-context';
 import { randomFeaturedSlashCommand } from './handlers/random-featured-slash';
+import { docsSlashCommand } from './handlers/docs/docs-slash';
 
 class CommandManager implements IInteractionManager {
     private handlers: ICommandHandler[] = [];
@@ -38,6 +39,7 @@ class CommandManager implements IInteractionManager {
             sendToIssuesContextMenuCommand,
             sendToQuestionsContextMenuCommand,
             randomFeaturedSlashCommand,
+            docsSlashCommand,
         ];
 
         for (const handler of commandsToRegister) {
