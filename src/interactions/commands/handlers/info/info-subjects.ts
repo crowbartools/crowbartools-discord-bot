@@ -58,13 +58,13 @@ did you use the address provided by OBS it is a "best guess" and not always corr
     {
         name: 'Install Log',
         message: {
-            content: 'We are requesting your install log to futher help you',
+            content: 'We are requesting your install log to further assist you',
             embeds: [
                 getBaseEmbed().setTitle('Instal Logs').setDescription(`
-You can get to Firebot's data folder via File > Open Data Folder or by pressing "Win + R" and pasting: \`%appdata%\firebot\v5\`
-Please find the file named \`SquirrelSetup.log\` which is located in \`%localappdata%\Firebotv5\`
-and / or \`%localappdata%\Firebotv5\` 
-and / or \`%localappdata%\SquirrelTemp\` 
+You can get to Firebot's data folder via File > Open Data Folder or by pressing "Win + R" and pasting: \`%appdata%\\firebot\\v5\`
+Please find the file named \`SquirrelSetup.log\` which is located in \`%localappdata%\\Firebotv5\`
+and / or \`%localappdata%\\Firebotv5\` 
+and / or \`%localappdata%\\SquirrelTemp\` 
 and post it in this thread.
 `),
             ],
@@ -75,7 +75,7 @@ and post it in this thread.
         message: {
             content: 'Please send us your latest backup zip',
             embeds: [
-                getBaseEmbed().setTitle('OBS WebSocket Settings')
+                getBaseEmbed().setTitle('Firebot Backups')
                     .setDescription(`
 Here's how you can do that: 
 - Open Firebot and go to **Settings** > **Backup** 
