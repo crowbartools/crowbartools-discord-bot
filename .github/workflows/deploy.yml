@@ -23,3 +23,19 @@ jobs:
                   password: ${{ secrets.PASSWORD }}
                   port: ${{ secrets.PORT }}
                   script: cd /srv/crowbartools-discord-bot/ && git reset --hard origin/master && git pull && npm install && npm run build && pm2 restart discord-bot
+            - name: Discord Webhook Action
+              uses: tsickert/discord-webhook@v6.0.0
+              if: ${{ success() }}
+              with:
+                  webhook-url: ${{ secrets.DISCORD_GIT_WEBHOOK_URL }}
+                  embed-title: "[crowbartools/crowbartools-discord-bot] Deployed to Production"
+                  embed-url: "https://github.com/crowbartools/crowbartools-discord-bot/deployments"
+                  embed-color: 5763719
+            - name: Discord Webhook Action
+              uses: tsickert/discord-webhook@v6.0.0
+              if: ${{ failure() }}
+              with:
+                  webhook-url: ${{ secrets.DISCORD_GIT_WEBHOOK_URL }}
+                  embed-title: "[crowbartools/crowbartools-discord-bot] Deployment Failed"
+                  embed-url: "https://github.com/crowbartools/crowbartools-discord-bot/deployments"
+                  embed-color: 15548997
