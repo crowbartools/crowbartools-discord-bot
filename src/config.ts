@@ -46,7 +46,7 @@ class BotConfig {
         ];
 
         return expectedKeys.every((k) => {
-            if (envResult.parsed[k]) {
+            if (envResult.parsed[k] != null) {
                 return true;
             }
             console.error(`Could not find key ${k} in .env file.`);
