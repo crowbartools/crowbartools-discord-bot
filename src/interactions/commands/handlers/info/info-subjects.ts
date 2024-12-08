@@ -135,7 +135,7 @@ export const infoSubjects: Array<{
             caption: "We are requesting your install log to futher help you",
             value: {
                 color: 0xffbd00,
-                title: 'OBS WebSocket Settings',
+                title: 'Instal Logs',
                 author: {
                     name: 'Firebot Support',
                     icon_url: 'https://raw.githubusercontent.com/crowbartools/Firebot/master/src/gui/images/logo.png',
