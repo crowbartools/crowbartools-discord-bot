@@ -28,8 +28,8 @@
         "typescript": "^5.5.4"
     },
     "scripts": {
-        "dev": "tsc && cross-env NODE_ENV=development node dist/main.js",
-        "start": "cross-env NODE_ENV=production node dist/main.js",
+        "dev": "tsc && NODE_ENV=development node dist/main.js",
+        "start": "NODE_ENV=production node dist/main.js",
         "build": "tsc",
         "lint": "eslint . --ext .js,.ts",
         "test": "jest"
