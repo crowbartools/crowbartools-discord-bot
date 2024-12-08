@@ -8,10 +8,16 @@ on:
         branches:
             - master
 
+concurrency:
+  group: production
+  cancel-in-progress: true
+
 jobs:
     deploy:
         name: Deploy Bot
         runs-on: 'ubuntu-latest'
+        environment: production
+        concurrency: production
         if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
         steps:
             - name: SSH Remote Commands
