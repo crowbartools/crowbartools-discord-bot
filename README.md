@@ -36,7 +36,7 @@
   - Discord Server (Guild) ID
     - Open up Discord, right click the icon for your test server and select "Copy Server ID", paste it in your .env for `DISCORD_GUILD_ID`
     - If you don't see the copy option, you probably need to enable Developer Mode in Discord (Settings > Advanced > Developer Mode)
-<img width="206" alt="Screenshot 2024-12-08 at 11 48 08 AM" src="https://github.com/user-attachments/assets/516404de-24bf-4153-9be6-b3810a829d2c">
+    - <img width="206" alt="Screenshot 2024-12-08 at 11 48 08 AM" src="https://github.com/user-attachments/assets/516404de-24bf-4153-9be6-b3810a829d2c">
   - All other env vars can be left empty unless you need to test those specific features (eg github issue creation, sent to questions/issues commands, etc)
 
 ### Run the bot
