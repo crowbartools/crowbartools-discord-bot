@@ -21,7 +21,7 @@ const config = new SlashCommandBuilder()
     )
     .addUserOption((option) =>
         option
-            .setName('targetuser')
+            .setName('target')
             .setDescription('The user to target')
             .setRequired(false)
     );
@@ -43,11 +43,11 @@ export const infoSlashCommand: ICommandHandler = {
             return;
         }
 
-        const user = interaction.options.getUser('targetuser');
+        const targetUser = interaction.options.getUser('target');
 
         const variableMap = {
             ['{user}']: userMention(interaction.user.id),
-            ['{target}']: userMention(user?.id),
+            ['{target}']: userMention(targetUser?.id),
         };
 
         await interaction.editReply(replaceVariables(variableMap, message));
