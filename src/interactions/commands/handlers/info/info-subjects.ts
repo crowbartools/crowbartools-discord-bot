@@ -21,7 +21,7 @@ export const infoSubjects: Array<{
                 getBaseEmbed().setTitle('Off Screen?').setDescription(`
 - Close Firebot
 - Press Windows + R to open the Windows Run dialog
-- Then paste\`%appdata%/Firebotv5\` into the box and press enter.
+- Then paste\`%appdata%\\Firebotv5\` into the box and press enter.
 - Delete the file: \`window-state.json\`
 `),
             ],
