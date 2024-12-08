@@ -1,21 +1,29 @@
-import { SlashCommandBuilder, } from 'discord.js';
+import { SlashCommandBuilder, userMention } from 'discord.js';
 import { CommandType, ICommandHandler } from '../../command-handler.interface';
 import { infoSubjects } from './info-subjects';
+import { replaceVariables } from '../../../../helpers/variable-replacer';
 
 const config = new SlashCommandBuilder()
     .setName('info')
-    .setDescription('Firebot information subjects')
+    .setDescription('Firebot info')
+    .setDefaultMemberPermissions(0)
     .addStringOption((option) =>
         option
             .setName('subject')
-            .setDescription('the subject to post')
-            .setRequired(false)
+            .setDescription('The subject to post')
+            .setRequired(true)
             .setChoices(
                 infoSubjects.map((s) => ({
                     name: s.name,
-                    value: s.value?.title ?? s.name,
+                    value: s.name,
                 }))
             )
+    )
+    .addUserOption((option) =>
+        option
+            .setName('targetuser')
+            .setDescription('The user to target')
+            .setRequired(false)
     );
 
 export const infoSlashCommand: ICommandHandler = {
@@ -26,17 +34,22 @@ export const infoSlashCommand: ICommandHandler = {
 
         const subjectName = interaction.options.getString('subject');
 
-        if (!subjectName) {
+        const message = infoSubjects.find(
+            (p) => p.name === subjectName
+        )?.message;
+
+        if (!message) {
+            await interaction.editReply('Invalid subject');
             return;
         }
 
-        const subject = infoSubjects.find((p) => p.name === subjectName);
-        if (subject.value?.description?.includes("{user}")) {
-            subject.value.description = subject.value.description.replaceAll("{user}", `${interaction.user}`)
-        }
-        if (subject.caption?.includes("{user}")) {
-            subject.caption = subject.caption.replaceAll("{user}", `${interaction.user}`)
-        }
-        await interaction.editReply({ content: subject.caption, embeds: [subject.value] });
+        const user = interaction.options.getUser('targetuser');
+
+        const variableMap = {
+            ['{user}']: userMention(interaction.user.id),
+            ['{target}']: userMention(user?.id),
+        };
+
+        await interaction.editReply(replaceVariables(variableMap, message));
     },
 };
