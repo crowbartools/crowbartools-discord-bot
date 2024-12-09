@@ -78,26 +78,11 @@ Once you've located the file, please upload it to this thread.
             },
         },
         {
-            name: 'Backup Request',
-            message: {
-                content: 'Please send us your latest backup zip',
-                embeds: [
-                    getBaseEmbed().setTitle('How to send a backup').setDescription(`
-- Open Firebot and go to **Settings** > **Backup** 
-- Press **Backup Now** 
-- Next, go to **Manage Backups** > **Open Backups Folder** 
-- DM {user} the latest **backup.zip** in that folder
-`),
-                ],
-            },
-        },
-        {
             name: 'Nightly Builds',
             message: {
                 embeds: [
                     getBaseEmbed()
-                        .setTitle('Nightly Builds')
-                        .setDescription(
+                        .setTitle('Nightly Builds').setDescription(
                             `You can find more information about the Nightly builds [here](https://discord.com/channels/372817064034959370/372821213443129346/973669737877889094).`
                         ),
                 ],
@@ -108,8 +93,7 @@ Once you've located the file, please upload it to this thread.
             message: {
                 content: 'Please post your latest Firebot log file',
                 embeds: [
-                    getBaseEmbed().setTitle('How to locate your Logs folder')
-                        .setDescription(`
+                    getBaseEmbed().setTitle('How to locate your Logs folder').setDescription(`
 1. In Firebot, go to **File** > **Open Logs Folder**  
    - or -  
 2. Press **Win + R**, paste \`%appdata%\\Firebot\\v5\\logs\\\` into the field, and click **OK**.  
