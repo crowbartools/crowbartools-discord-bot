@@ -6,7 +6,6 @@ import { replaceVariables } from '../../../../helpers/variable-replacer';
 const config = new SlashCommandBuilder()
     .setName('info')
     .setDescription('Firebot info')
-    .setDefaultMemberPermissions(0)
     .addStringOption((option) =>
         option
             .setName('subject')
