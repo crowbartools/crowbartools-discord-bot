@@ -20,6 +20,7 @@ import { sendToIssuesContextMenuCommand } from './handlers/send-to-issues-contex
 import { randomFeaturedSlashCommand } from './handlers/random-featured-slash';
 import { docsSlashCommand } from './handlers/docs/docs-slash';
 import { infoSlashCommand } from './handlers/info/info-slash';
+import { backupRequestCommand } from './handlers/backup-request';
 
 class CommandManager implements IInteractionManager {
     private handlers: ICommandHandler[] = [];
@@ -42,6 +43,7 @@ class CommandManager implements IInteractionManager {
             randomFeaturedSlashCommand,
             docsSlashCommand,
             infoSlashCommand,
+            backupRequestCommand,
         ];
 
         for (const handler of commandsToRegister) {

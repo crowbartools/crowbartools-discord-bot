@@ -9,7 +9,7 @@ const config = new SlashCommandBuilder()
     .setDescription('Request a users backup')
     .setDefaultMemberPermissions(0);
 
-export const saySlashCommand: ICommandHandler = {
+export const backupRequestCommand: ICommandHandler = {
     type: CommandType.SlashCommand,
     config,
     async onTrigger(interaction) {
