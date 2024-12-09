@@ -5,7 +5,7 @@ function getBaseEmbed() {
     return new EmbedBuilder().setColor('#FFBE00');
 }
 const config = new SlashCommandBuilder()
-    .setName('Backup Request')
+    .setName('backuprequest')
     .setDescription('Request a users backup')
     .setDefaultMemberPermissions(0);
 
