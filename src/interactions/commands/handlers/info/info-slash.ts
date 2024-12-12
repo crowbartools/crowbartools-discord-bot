@@ -1,7 +1,11 @@
-import { SlashCommandBuilder, userMention } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
 import { CommandType, ICommandHandler } from '../../command-handler.interface';
 import { infoSubjects } from './info-subjects';
 import { replaceVariables } from '../../../../helpers/variable-replacer';
+
+export function getBaseEmbed() {
+    return new EmbedBuilder().setColor('#FFBE00');
+}
 
 const config = new SlashCommandBuilder()
     .setName('info')
