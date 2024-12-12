@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const manualRestore = {
+export const manualRestore: InfoTopic = {
     name: 'Manual Restore',
     message: {
         embeds: [

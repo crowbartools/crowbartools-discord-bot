@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const instalLog = {
+export const instalLog: InfoTopic = {
     name: 'Install Log',
     message: {
         content:

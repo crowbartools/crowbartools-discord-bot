@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const bitDefender = {
+export const bitDefender: InfoTopic = {
     name: 'Bit Defender',
     message: {
         embeds: [

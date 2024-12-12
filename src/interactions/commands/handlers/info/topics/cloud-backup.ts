@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const cloudBackups = {
+export const cloudBackups: InfoTopic = {
     name: 'Cloud Backups',
     message: {
         embeds: [

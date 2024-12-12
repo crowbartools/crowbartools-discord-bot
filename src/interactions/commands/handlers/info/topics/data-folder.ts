@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const dataFolder = {
+export const dataFolder: InfoTopic = {
     name: 'Data Folder',
     message: {
         embeds: [

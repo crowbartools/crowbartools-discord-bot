@@ -1,24 +1,20 @@
-import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
+import { SlashCommandBuilder, userMention } from 'discord.js';
 import { CommandType, ICommandHandler } from '../../command-handler.interface';
-import { infoSubjects } from './info-subjects';
+import { infoTopics } from './topics';
 import { replaceVariables } from '../../../../helpers/variable-replacer';
-
-export function getBaseEmbed() {
-    return new EmbedBuilder().setColor('#FFBE00');
-}
 
 const config = new SlashCommandBuilder()
     .setName('info')
     .setDescription('Firebot info')
     .addStringOption((option) =>
         option
-            .setName('subject')
-            .setDescription('The subject to post')
+            .setName('topic')
+            .setDescription('The topic to post')
             .setRequired(true)
             .setChoices(
-                infoSubjects.map((s) => ({
-                    name: s.name,
-                    value: s.name,
+                infoTopics.map((t) => ({
+                    name: t.name,
+                    value: t.name,
                 }))
             )
     )
@@ -35,14 +31,12 @@ export const infoSlashCommand: ICommandHandler = {
     async onTrigger(interaction) {
         await interaction.deferReply();
 
-        const subjectName = interaction.options.getString('subject');
+        const topicName = interaction.options.getString('topic');
 
-        const message = infoSubjects.find(
-            (p) => p.name === subjectName
-        )?.message;
+        const message = infoTopics.find((p) => p.name === topicName)?.message;
 
         if (!message) {
-            await interaction.editReply('Invalid subject');
+            await interaction.editReply('Invalid topic');
             return;
         }
 

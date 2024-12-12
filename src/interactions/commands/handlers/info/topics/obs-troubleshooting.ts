@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const obsTroubleShooting = {
+export const obsTroubleShooting: InfoTopic = {
     name: 'OBS Troubleshooting',
     message: {
         embeds: [

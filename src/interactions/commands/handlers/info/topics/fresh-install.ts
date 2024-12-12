@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const reinstall = {
+export const reinstall: InfoTopic = {
     name: 'Fresh Install',
     message: {
         embeds: [

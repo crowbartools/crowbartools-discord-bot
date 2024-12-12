@@ -1,10 +1,9 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const tuts =
-{
+export const tuts: InfoTopic = {
     name: 'Guides and Tutorials',
     message: {
-        content: "Guides and Tutorials by the community",
+        content: 'Guides and Tutorials by the community',
         embeds: [
             getBaseEmbed().setTitle('Guides and Tutorials').setDescription(`
 Hi, here you can see a short list of guides and tutorials made by the community for Firebot:
@@ -20,4 +19,4 @@ https://github.com/crowbartools/Firebot/wiki/Getting-Started
 `),
         ],
     },
-}
+};

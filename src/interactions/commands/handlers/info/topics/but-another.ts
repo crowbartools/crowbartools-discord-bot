@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const butAnother = {
+export const butAnother: InfoTopic = {
     name: 'But Another Bot Does It',
     message: {
         embeds: [

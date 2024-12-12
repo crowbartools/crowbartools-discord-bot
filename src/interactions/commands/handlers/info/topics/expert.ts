@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const expert = {
+export const expert: InfoTopic = {
     name: 'Firebot Expert',
     message: {
         embeds: [

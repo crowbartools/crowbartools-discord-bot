@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const offScreen = {
+export const offScreen: InfoTopic = {
     name: 'Off Screen',
     message: {
         embeds: [
@@ -17,5 +17,3 @@ This will reset Firebot's window position. Reopen Firebot, and it should appear 
         ],
     },
 };
-
- 

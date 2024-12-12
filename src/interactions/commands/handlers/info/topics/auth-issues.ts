@@ -1,11 +1,10 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const authIssues =
-    {
-        name: 'Auth Issues',
-        message: {
-            embeds: [
-                getBaseEmbed().setTitle('Auth Issues').setDescription(`
+export const authIssues: InfoTopic = {
+    name: 'Auth Issues',
+    message: {
+        embeds: [
+            getBaseEmbed().setTitle('Auth Issues').setDescription(`
 If you're experiencing issues with Firebot hanging on start up or failing to connect to Twitch, follow these steps to troubleshoot:  
 
 1. **Check Your Antivirus Software**  
@@ -23,6 +22,6 @@ If you're experiencing issues with Firebot hanging on start up or failing to con
    - Delete the file named \`auth-twitch.json\`.  
    - Restart Firebot and log in again.
 `),
-                ],
-            },
-        };
+        ],
+    },
+};

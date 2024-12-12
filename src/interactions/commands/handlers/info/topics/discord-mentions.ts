@@ -1,6 +1,6 @@
-import { getBaseEmbed } from "../info-slash";
+import { getBaseEmbed, InfoTopic } from '../info-helpers';
 
-export const discordMentions = {
+export const discordMentions: InfoTopic = {
     name: 'Discord Mentions',
     message: {
         embeds: [
