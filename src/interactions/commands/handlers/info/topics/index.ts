@@ -13,6 +13,7 @@ import { obsTroubleShooting } from './obs-troubleshooting';
 import { offScreen } from './offscreen';
 import { tuts } from './tutorials';
 import { InfoTopic } from '../info-helpers';
+import { arm64InstallError } from './arm64';
 
 export const infoTopics: Array<InfoTopic> = [
     authIssues,
@@ -29,4 +30,5 @@ export const infoTopics: Array<InfoTopic> = [
     obsTroubleShooting,
     offScreen,
     tuts,
+    arm64InstallError,
 ];
