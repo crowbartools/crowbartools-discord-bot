@@ -18,6 +18,7 @@ const discordClient = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.GuildVoiceStates, // Needed to track users in voice channels
     ],
     partials: [Partials.Message, Partials.Channel, Partials.User],
     presence: {

@@ -21,6 +21,7 @@ import { randomFeaturedSlashCommand } from './handlers/random-featured-slash';
 import { docsSlashCommand } from './handlers/docs/docs-slash';
 import { infoSlashCommand } from './handlers/info/info-slash';
 import { backupRequestCommand } from './handlers/backup-request';
+import { createVoicechat } from './handlers/voicechat/voice-slash';
 
 class CommandManager implements IInteractionManager {
     private handlers: ICommandHandler[] = [];
@@ -44,6 +45,7 @@ class CommandManager implements IInteractionManager {
             docsSlashCommand,
             infoSlashCommand,
             backupRequestCommand,
+            createVoicechat,
         ];
 
         for (const handler of commandsToRegister) {
