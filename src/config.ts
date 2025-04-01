@@ -24,6 +24,11 @@ class BotConfig {
             apiKey: process.env.OPENAI_API_KEY,
         };
     }
+    get firebot() {
+        return {
+            atProtoFeedApiToken: process.env.ATPROTO_FEED_API_TOKEN,
+        };
+    }
 
     loadAndValidate() {
         const envResult = dotenv.config();

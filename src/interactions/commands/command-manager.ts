@@ -22,6 +22,7 @@ import { docsSlashCommand } from './handlers/docs/docs-slash';
 import { infoSlashCommand } from './handlers/info/info-slash';
 import { backupRequestCommand } from './handlers/backup-request';
 import { createVoicechat } from './handlers/voicechat/voice-slash';
+import { removeBlueskyPostFromFeedSlashCommand } from './handlers/remove-bluesky-post-from-feed-slash';
 
 class CommandManager implements IInteractionManager {
     private handlers: ICommandHandler[] = [];
@@ -46,6 +47,7 @@ class CommandManager implements IInteractionManager {
             infoSlashCommand,
             backupRequestCommand,
             createVoicechat,
+            removeBlueskyPostFromFeedSlashCommand,
         ];
 
         for (const handler of commandsToRegister) {
