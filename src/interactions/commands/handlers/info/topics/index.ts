@@ -1,6 +1,7 @@
 import { authIssues } from './auth-issues';
 import { bitDefender } from './bit-defender';
 import { butAnother } from './but-another';
+import { ccwClip } from './ccw-clip';
 import { cloudBackups } from './cloud-backup';
 import { dataFolder } from './data-folder';
 import { discordMentions } from './discord-mentions';
@@ -20,6 +21,7 @@ export const infoTopics: Array<InfoTopic> = [
     authIssues,
     bitDefender,
     butAnother,
+    ccwClip,
     cloudBackups,
     dataFolder,
     discordMentions,
