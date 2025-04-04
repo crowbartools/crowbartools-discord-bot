@@ -6,7 +6,7 @@ export const instalLog: InfoTopic = {
         content:
             'To help us assist you more effectively, please provide your install log.',
         embeds: [
-            getBaseEmbed().setTitle('Instal Logs').setDescription(`
+            getBaseEmbed().setTitle('Install Logs').setDescription(`
 To locate your Firebot install logs:  
 1. Press **Win + R** to open the Run dialog.  
 2. Enter one of the following paths and press Enter:  
