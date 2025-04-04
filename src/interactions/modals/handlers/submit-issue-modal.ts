@@ -2,6 +2,7 @@ import { buildIssueEmbed } from '../../../helpers/github-embed-factory';
 import { IssueModalType } from '../../../helpers/issue-modal-factory';
 import { parseModalId } from '../../../helpers/modal-id-parser';
 import { createIssue, searchIssues } from '../../../services/github.service';
+import { IssueType } from '../../../types/github';
 import { capitalize } from '../../../util/strings';
 import { IModalHandler } from '../modal-handler.interface';
 
@@ -26,7 +27,7 @@ export const submitIssueModalHandler: IModalHandler = {
             interaction.fields.getTextInputValue('description');
 
         const issueDetails = {
-            title: `${issueConfig.titlePrefix} ${capitalize(titleValue.trim(), false)}`,
+            title: capitalize(titleValue.trim(), false),
             description: descriptionValue,
         };
 
@@ -79,7 +80,7 @@ export const submitIssueModalHandler: IModalHandler = {
             repo: FIREBOT_REPO,
             title: issueDetails.title,
             body: issueDetails.description,
-            labels: [issueConfig.label],
+            type: issueConfig.type,
         });
 
         if (newIssue == null) {
@@ -105,15 +106,13 @@ export const submitIssueModalHandler: IModalHandler = {
 function getIssueTypeConfig(issueType: IssueModalType): {
     name: string;
     longName: string;
-    titlePrefix: string;
-    label: string;
+    type: IssueType;
 } {
     if (issueType === IssueModalType.SubmitFeature) {
         return {
             name: 'feature',
             longName: 'feature request',
-            titlePrefix: '[Feature Request]',
-            label: 'Enhancement',
+            type: 'Feature',
         };
     }
 
@@ -121,8 +120,7 @@ function getIssueTypeConfig(issueType: IssueModalType): {
         return {
             name: 'bug',
             longName: 'bug report',
-            titlePrefix: '[Bug]',
-            label: 'Bug',
+            type: 'Bug',
         };
     }
 

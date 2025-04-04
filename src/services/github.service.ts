@@ -30,6 +30,7 @@ export async function createIssue(
         title: createIssueRequest.title,
         body: createIssueRequest.body,
         labels: createIssueRequest.labels,
+        type: createIssueRequest.type,
     };
 
     let response: AxiosResponse<IIssue>;

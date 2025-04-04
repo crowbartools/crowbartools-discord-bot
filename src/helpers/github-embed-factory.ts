@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { IIssue, ICommitData } from '../types/github';
+import { IIssue, ICommitData, IssueType } from '../types/github';
 import { limitString } from '../util/strings';
 import { DateTime } from 'luxon';
 
@@ -44,17 +44,20 @@ export function buildIssueCreateFailedEmbed(text: string): EmbedBuilder {
     return new EmbedBuilder().setColor(16729927).setDescription(text);
 }
 
+const ISSUE_TYPE_ICON_MAP: Record<IssueType, string> = {
+    Bug: 'https://upload.wikimedia.org/wikipedia/commons/b/b9/Solid_red.png',
+    Feature:
+        'https://upload.wikimedia.org/wikipedia/commons/e/e5/Solid_blue.png',
+    Task: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Solid_orange.png',
+    Support:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Solid_purple.svg/1024px-Solid_purple.svg.png',
+};
+
 export function buildIssueEmbed(
     issue: IIssue,
     showExpandedInfo = false
 ): EmbedBuilder {
     const embed = new EmbedBuilder().setColor(0x00a4cf);
-
-    embed.setAuthor({
-        name: 'Firebot',
-        iconURL: firebotLogoUrl,
-        url: firebotRepoUrl,
-    });
 
     // set footer if user isnt crowbartools robot
     if (issue.user.login !== 'CrowbarToolsRobot') {
@@ -66,7 +69,7 @@ export function buildIssueEmbed(
 
     embed.setTimestamp(new Date(issue.created_at));
 
-    let title = `Issue #${issue.number}: ${issue.title}`;
+    let title = `#${issue.number}: ${issue.title}`;
     if (title.length > 256) {
         title = title.substring(0, 255);
     }
@@ -76,6 +79,19 @@ export function buildIssueEmbed(
     }
     embed.setTitle(title);
     embed.setDescription(body);
+
+    if (issue.type) {
+        embed.setAuthor({
+            name: issue.type.name,
+            iconURL: ISSUE_TYPE_ICON_MAP[issue.type.name],
+        });
+    } else {
+        embed.setAuthor({
+            name: 'Firebot',
+            iconURL: firebotLogoUrl,
+            url: firebotRepoUrl,
+        });
+    }
 
     embed.setURL(issue.html_url);
 

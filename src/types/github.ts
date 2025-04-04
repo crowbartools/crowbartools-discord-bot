@@ -1,8 +1,11 @@
+export type IssueType = 'Bug' | 'Feature' | 'Task' | 'Support';
+
 export interface ICreateIssueRequest {
     repo: string;
     title: string;
     body: string;
-    labels: string[];
+    labels?: string[];
+    type: IssueType;
 }
 
 export interface IGetCommitsRequest {
@@ -24,6 +27,12 @@ export interface IIssue {
         avatar_url: string;
     };
     labels: IIssueLabel[];
+    type?: {
+        id: number;
+        name: IssueType;
+        description: string;
+        color: string;
+    };
     comments: number;
     state: string;
     created_at: string;
