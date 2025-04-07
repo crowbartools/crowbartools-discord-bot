@@ -127,13 +127,15 @@ export const createVoicechat: ICommandHandler = {
             if (interaction.channel.parent) {
                 // If the Channel where the command was used belongs to a Category,
                 // create another Channel in the same Category.
-                const category = interaction.channel.parent;
+                const channel = interaction.channel.parent;
 
-                const categoryVoiceChannel = await category.guild.channels.create({
+                const voiceChannel = await channel.guild.channels.create({
                     name: chosenVoiceChannelName, // The name given to the Channel by the user
                     type: ChannelType.GuildVoice, // The type of the Channel created.
                     userLimit: voiceChannelUserLimit, // The max number of concurrent users
-                    parent: category as CategoryChannel,
+                    parent: interaction.channel.isThread()
+                        ? channel.parent
+                        : (channel as CategoryChannel),
                 });
 
                 // If we managed to create the Channel, edit the initial response with
@@ -143,7 +145,7 @@ export const createVoicechat: ICommandHandler = {
                         `✅ Created temporary voice channel: **${chosenVoiceChannelName}** in the same category!`,
                 });
                 console.log(`✅ Created temporary voice channel: **${chosenVoiceChannelName}** in the same category!`);
-                scheduleDeletion(categoryVoiceChannel);
+                scheduleDeletion(voiceChannel);
                 return;
             }
         } catch (error) {
