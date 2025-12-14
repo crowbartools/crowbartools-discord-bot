@@ -16,6 +16,7 @@ import { tuts } from './tutorials';
 import { InfoTopic } from '../info-helpers';
 import { arm64InstallError } from './arm64';
 import { overlayIssues } from './overlay-issues';
+import { debugInfo } from './debug-info';
 
 export const infoTopics: Array<InfoTopic> = [
     authIssues,
@@ -35,4 +36,5 @@ export const infoTopics: Array<InfoTopic> = [
     tuts,
     arm64InstallError,
     overlayIssues,
+    debugInfo
 ];
