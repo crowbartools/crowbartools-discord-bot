@@ -17,6 +17,8 @@ import { InfoTopic } from '../info-helpers';
 import { arm64InstallError } from './arm64';
 import { overlayIssues } from './overlay-issues';
 import { debugInfo } from './debug-info';
+import { unsupportedVersion } from './unsupported-version';
+import { supportPolicy } from './support-policy';
 
 export const infoTopics: Array<InfoTopic> = [
     authIssues,
@@ -36,5 +38,7 @@ export const infoTopics: Array<InfoTopic> = [
     tuts,
     arm64InstallError,
     overlayIssues,
-    debugInfo
+    debugInfo,
+    supportPolicy,
+    unsupportedVersion,
 ];

@@ -154,3 +154,95 @@ export async function getLatestFirebotReleaseVersion(): Promise<string | null> {
 
     return null;
 }
+
+export async function getRecentFirebotReleases(): Promise<IRelease[] | null> {
+    const getReleasesUrl =
+        'https://api.github.com/repos/crowbartools/firebot/releases?per_page=50';
+
+    let response: AxiosResponse<IRelease[]>;
+    try {
+        response = await axios.get<IRelease[]>(
+            getReleasesUrl,
+            getDefaultAxiosConfig()
+        );
+    } catch (error) {
+        console.log('Error getting firebot releases', error);
+    }
+
+    if (response && response.status == 200) {
+        return response.data;
+    }
+
+    return null;
+}
+
+export interface SupportedVersions {
+    currentStable: string | null;
+    previousStable: string | null;
+    previousStableExpiresAt: number | null;
+    prerelease: string | null;
+}
+
+export async function getSupportedFirebotVersions(): Promise<SupportedVersions> {
+    const releases = await getRecentFirebotReleases();
+
+    const result: SupportedVersions = {
+        currentStable: null,
+        previousStable: null,
+        previousStableExpiresAt: null,
+        prerelease: null,
+    };
+
+    if (!releases || releases.length === 0) {
+        return result;
+    }
+
+    // Find stable releases
+    const stableReleases = releases.filter(
+        (r) => !r.prerelease
+    );
+
+    // Find prerelease versions (betas, etc)
+    const prereleases = releases.filter(
+        (r) => r.prerelease
+    );
+
+    // Current stable is the most recent stable release
+    if (stableReleases.length > 0) {
+        result.currentStable = stableReleases[0].tag_name;
+
+        // Check if previous stable should still be supported (within 30 days of current stable release)
+        if (stableReleases.length > 1) {
+            const currentStableDate = new Date(stableReleases[0].published_at);
+            const now = new Date();
+            const daysSinceCurrentStable = Math.floor(
+                (now.getTime() - currentStableDate.getTime()) / (1000 * 60 * 60 * 24)
+            );
+
+            if (daysSinceCurrentStable <= 30) {
+                result.previousStable = stableReleases[1].tag_name;
+                // Calculate expiration date (30 days from current stable release)
+                const expirationDate = new Date(currentStableDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+                result.previousStableExpiresAt = Math.floor(expirationDate.getTime() / 1000);
+            }
+        }
+    }
+
+    // Check if there's a prerelease that hasn't been superseded by a stable
+    // A prerelease is still supported if it's newer than the current stable
+    if (prereleases.length > 0 && stableReleases.length > 0) {
+        const latestPrerelease = prereleases[0];
+        const latestPrereleaseDate = new Date(latestPrerelease.published_at);
+        const currentStableDate = new Date(stableReleases[0].published_at);
+
+        // Prerelease is supported if it was released after the current stable
+        if (latestPrereleaseDate > currentStableDate) {
+            result.prerelease = latestPrerelease.tag_name;
+        }
+    } else if (prereleases.length > 0 && stableReleases.length === 0) {
+        // No stable releases, so the prerelease is supported
+        result.prerelease = prereleases[0].tag_name;
+    }
+
+    return result;
+}

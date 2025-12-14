@@ -33,12 +33,16 @@ export const infoSlashCommand: ICommandHandler = {
 
         const topicName = interaction.options.getString('topic');
 
-        const message = infoTopics.find((p) => p.name === topicName)?.message;
+        const topic = infoTopics.find((p) => p.name === topicName);
 
-        if (!message) {
+        if (!topic?.message) {
             await interaction.editReply('Invalid topic');
             return;
         }
+
+        const message = typeof topic.message === 'function'
+            ? await topic.message()
+            : topic.message;
 
         const targetUser = interaction.options.getUser('target');
 

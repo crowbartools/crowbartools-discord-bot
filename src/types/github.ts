@@ -59,4 +59,6 @@ export interface ISearchResult {
 
 export interface IRelease {
     tag_name: string;
+    published_at: string;
+    prerelease: boolean;
 }
