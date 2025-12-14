@@ -9,6 +9,7 @@ import {
     IRelease,
 } from '../types/github';
 import { config } from '../config';
+import { APIEmbedField } from 'discord.js';
 
 function getDefaultAxiosConfig(): AxiosRequestConfig {
     return {
@@ -198,14 +199,10 @@ export async function getSupportedFirebotVersions(): Promise<SupportedVersions> 
     }
 
     // Find stable releases
-    const stableReleases = releases.filter(
-        (r) => !r.prerelease
-    );
+    const stableReleases = releases.filter((r) => !r.prerelease);
 
     // Find prerelease versions (betas, etc)
-    const prereleases = releases.filter(
-        (r) => r.prerelease
-    );
+    const prereleases = releases.filter((r) => r.prerelease);
 
     // Current stable is the most recent stable release
     if (stableReleases.length > 0) {
@@ -216,14 +213,19 @@ export async function getSupportedFirebotVersions(): Promise<SupportedVersions> 
             const currentStableDate = new Date(stableReleases[0].published_at);
             const now = new Date();
             const daysSinceCurrentStable = Math.floor(
-                (now.getTime() - currentStableDate.getTime()) / (1000 * 60 * 60 * 24)
+                (now.getTime() - currentStableDate.getTime()) /
+                    (1000 * 60 * 60 * 24)
             );
 
             if (daysSinceCurrentStable <= 30) {
                 result.previousStable = stableReleases[1].tag_name;
                 // Calculate expiration date (30 days from current stable release)
-                const expirationDate = new Date(currentStableDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-                result.previousStableExpiresAt = Math.floor(expirationDate.getTime() / 1000);
+                const expirationDate = new Date(
+                    currentStableDate.getTime() + 30 * 24 * 60 * 60 * 1000
+                );
+                result.previousStableExpiresAt = Math.floor(
+                    expirationDate.getTime() / 1000
+                );
             }
         }
     }
@@ -245,4 +247,37 @@ export async function getSupportedFirebotVersions(): Promise<SupportedVersions> 
     }
 
     return result;
+}
+
+export async function getSupportedFirebotVersionField(): Promise<APIEmbedField | null> {
+    const supportedVersions = await getSupportedFirebotVersions();
+
+    // Build the list of currently supported versions
+    const versionLines: string[] = [];
+    if (supportedVersions.currentStable) {
+        versionLines.push(`- **${supportedVersions.currentStable}** (Latest)`);
+    }
+    if (
+        supportedVersions.previousStable &&
+        supportedVersions.previousStableExpiresAt
+    ) {
+        versionLines.push(
+            `- **${supportedVersions.previousStable}** (Previous - support expires <t:${supportedVersions.previousStableExpiresAt}:R>)`
+        );
+    }
+    if (supportedVersions.prerelease) {
+        versionLines.push(
+            `- **${supportedVersions.prerelease}** (Pre-release)`
+        );
+    }
+
+    if (versionLines.length > 0) {
+        return {
+            name: 'Currently Supported Versions',
+            value: versionLines.join('\n'),
+            inline: false,
+        };
+    }
+
+    return null;
 }

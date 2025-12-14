@@ -6,7 +6,7 @@ import {
     ButtonStyle,
     EmbedBuilder,
 } from 'discord.js';
-import { getSupportedFirebotVersions } from '../../../../services/github.service';
+import { getSupportedFirebotVersionField } from '../../../../services/github.service';
 
 export function getBaseEmbed() {
     return new EmbedBuilder().setColor('#FFBE00');
@@ -18,35 +18,12 @@ export type InfoTopic = {
 };
 
 export async function getSupportPolicyEmbed(): Promise<EmbedBuilder> {
-    const supportedVersions = await getSupportedFirebotVersions();
-
-    // Build the list of currently supported versions
-    const versionLines: string[] = [];
-    if (supportedVersions.currentStable) {
-        versionLines.push(`- **${supportedVersions.currentStable}** (Latest)`);
-    }
-    if (
-        supportedVersions.previousStable &&
-        supportedVersions.previousStableExpiresAt
-    ) {
-        versionLines.push(
-            `- **${supportedVersions.previousStable}** (Previous - support expires <t:${supportedVersions.previousStableExpiresAt}:R>)`
-        );
-    }
-    if (supportedVersions.prerelease) {
-        versionLines.push(
-            `- **${supportedVersions.prerelease}** (Pre-release)`
-        );
-    }
-
+    
     const fields: APIEmbedField[] = [];
-
-    if (versionLines.length > 0) {
-        fields.push({
-            name: 'Currently Supported Versions',
-            value: versionLines.join('\n'),
-            inline: false,
-        });
+    
+    const supportedVersionsField = await getSupportedFirebotVersionField();
+    if (supportedVersionsField) {
+        fields.push(supportedVersionsField);
     }
 
     fields.push({
@@ -60,10 +37,6 @@ export async function getSupportPolicyEmbed(): Promise<EmbedBuilder> {
         inline: false,
     });
 
-    const currentlySupportedSection =
-        versionLines.length > 0
-            ? `**Currently Supported Versions:**\n${versionLines.join('\n')}\n\n`
-            : '';
     return getBaseEmbed()
         .setTitle('Support Policy')
         .setDescription(
