@@ -1,5 +1,6 @@
 import {
     ActionRowBuilder,
+    APIEmbedField,
     BaseMessageOptions,
     ButtonBuilder,
     ButtonStyle,
@@ -38,19 +39,37 @@ export async function getSupportPolicyEmbed(): Promise<EmbedBuilder> {
         );
     }
 
+    const fields: APIEmbedField[] = [];
+
+    if (versionLines.length > 0) {
+        fields.push({
+            name: 'Currently Supported Versions',
+            value: versionLines.join('\n'),
+            inline: false,
+        });
+    }
+
+    fields.push({
+        name: 'Policy Summary',
+        value: [
+            '- Latest stable release is always supported',
+            '- Previous stable releases are supported for up to **30 days** after a newer stable update',
+            '- Betas are unsupported once a newer beta or corresponding stable release is available',
+            '- Nightly builds receive limited support due to their unstable nature',
+        ].join('\n'),
+        inline: false,
+    });
+
     const currentlySupportedSection =
         versionLines.length > 0
             ? `**Currently Supported Versions:**\n${versionLines.join('\n')}\n\n`
             : '';
-    return getBaseEmbed().setTitle('Support Policy').setDescription(`
-${currentlySupportedSection}**Policy Summary:**
-- Latest stable release is always supported
-- Previous stable releases are supported for up to **30 days** after a newer stable update
-- Betas are unsupported once a newer beta or corresponding stable release is available
-- Nightly builds receive limited support due to their unstable nature
-
-To receive support, please update to a supported version of Firebot.
-`);
+    return getBaseEmbed()
+        .setTitle('Support Policy')
+        .setDescription(
+            'To provide the best possible support experience for both our users and volunteers, we maintain a support policy that defines which versions of Firebot are eligible for assistance.'
+        )
+        .addFields(...fields);
 }
 
 export function getSupportPolicyLinkButton() {
