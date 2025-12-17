@@ -1,6 +1,6 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import { CommandType, ICommandHandler } from '../command-handler.interface';
-import { addPostToFeed, removePostFromFeed } from '../../../services/firebot-atproto-feed.service';
+import { addPostToFeed } from '../../../services/firebot-atproto-feed.service';
 
 const config = new SlashCommandBuilder()
     .setName('addtofeed')

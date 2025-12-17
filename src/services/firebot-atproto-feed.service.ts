@@ -40,6 +40,7 @@ export async function addPostToFeed(
     try {
         const response = await axios.post(
             'https://atprotofeed.firebot.app/post',
+            {},
             {
                 params: {
                     postUrl,
