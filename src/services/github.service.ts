@@ -179,8 +179,10 @@ export async function getRecentFirebotReleases(): Promise<IRelease[] | null> {
 
 export interface SupportedVersions {
     currentStable: string | null;
-    previousStable: string | null;
-    previousStableExpiresAt: number | null;
+    previousStables: Array<{
+        version: string;
+        expiresAt: number;
+    }>;
     prerelease: string | null;
 }
 
@@ -189,8 +191,7 @@ export async function getSupportedFirebotVersions(): Promise<SupportedVersions> 
 
     const result: SupportedVersions = {
         currentStable: null,
-        previousStable: null,
-        previousStableExpiresAt: null,
+        previousStables: [],
         prerelease: null,
     };
 
@@ -208,7 +209,7 @@ export async function getSupportedFirebotVersions(): Promise<SupportedVersions> 
     if (stableReleases.length > 0) {
         result.currentStable = stableReleases[0].tag_name;
 
-        // Check if previous stable should still be supported (within 30 days of current stable release)
+        // Check if previous stable(s) should still be supported (within 30 days of current stable release)
         if (stableReleases.length > 1) {
             const currentStableDate = new Date(stableReleases[0].published_at);
             const now = new Date();
@@ -218,14 +219,28 @@ export async function getSupportedFirebotVersions(): Promise<SupportedVersions> 
             );
 
             if (daysSinceCurrentStable <= 30) {
-                result.previousStable = stableReleases[1].tag_name;
-                // Calculate expiration date (30 days from current stable release)
-                const expirationDate = new Date(
-                    currentStableDate.getTime() + 30 * 24 * 60 * 60 * 1000
-                );
-                result.previousStableExpiresAt = Math.floor(
-                    expirationDate.getTime() / 1000
-                );
+                let supersedingReleaseDate = currentStableDate;
+                let daysSinceSupersedingUpdate: number;
+
+                for (const previousStable of stableReleases.slice(1)) {
+                    // Calculate how long since release has been superseded
+                    daysSinceSupersedingUpdate = (supersedingReleaseDate.getTime() - new Date(previousStable.published_at).getTime()) / (1000 * 60 * 60 * 24);
+
+                    // If it's been more than 30 days since this release was superseded, we're done. Everything remaining is older.
+                    if (daysSinceSupersedingUpdate > 30) {
+                        break;
+                    }
+
+                    // Calculate expiration date (30 days from superseding stable release)
+                    const expirationDate = new Date(supersedingReleaseDate.getTime() + (30 * 24 * 60 * 60 * 1000));
+
+                    result.previousStables.push({
+                        version: previousStable.tag_name,
+                        expiresAt: Math.floor(expirationDate.getTime() / 1000)
+                    });
+
+                    supersedingReleaseDate = new Date(previousStable.published_at);
+                }
             }
         }
     }
@@ -257,13 +272,12 @@ export async function getSupportedFirebotVersionField(): Promise<APIEmbedField |
     if (supportedVersions.currentStable) {
         versionLines.push(`- **${supportedVersions.currentStable}** (Latest)`);
     }
-    if (
-        supportedVersions.previousStable &&
-        supportedVersions.previousStableExpiresAt
-    ) {
-        versionLines.push(
-            `- **${supportedVersions.previousStable}** (Previous - support expires <t:${supportedVersions.previousStableExpiresAt}:R>)`
-        );
+    if (supportedVersions.previousStables.length) {
+        for (const previousStable of supportedVersions.previousStables) {
+            versionLines.push(
+                `- **${previousStable.version}** (Previous - support expires <t:${previousStable.expiresAt}:R>)`
+            );
+        }
     }
     if (supportedVersions.prerelease) {
         versionLines.push(
