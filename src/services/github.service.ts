@@ -224,7 +224,7 @@ export async function getSupportedFirebotVersions(): Promise<SupportedVersions> 
 
                 for (const previousStable of stableReleases.slice(1)) {
                     // Calculate how long since release has been superseded
-                    daysSinceSupersedingUpdate = (supersedingReleaseDate.getTime() - new Date(previousStable.published_at).getTime()) / (1000 * 60 * 60 * 24);
+                    daysSinceSupersedingUpdate = (now.getTime() - supersedingReleaseDate.getTime()) / (1000 * 60 * 60 * 24);
 
                     // If it's been more than 30 days since this release was superseded, we're done. Everything remaining is older.
                     if (daysSinceSupersedingUpdate > 30) {
