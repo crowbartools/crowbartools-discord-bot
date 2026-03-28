@@ -96,10 +96,23 @@ export const submitIssueModalHandler: IModalHandler = {
             embeds: [issueEmbed],
         });
 
-        await interaction.user.send({
-            content: `Your ${issueConfig.longName} was successfully submitted! Here's a copy so you can easily find it later to track progress.`,
-            embeds: [issueEmbed],
-        });
+        try {
+            await interaction.user.send({
+                content: `Your ${issueConfig.longName} was successfully submitted! Here's a copy so you can easily find it later to track progress.`,
+                embeds: [issueEmbed],
+            });
+        } catch {
+            console.error(`Failed to DM ticket to user ${interaction.user.globalName}`);
+
+            try {
+                await interaction.followUp({
+                    content: `Your ${issueConfig.longName} was successfully submitted, but I failed to DM it to you. Use the ticket number link above to track progress.`,
+                    ephemeral: true
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
     },
 };
 
