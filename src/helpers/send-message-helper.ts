@@ -7,7 +7,6 @@ import {
     ThreadAutoArchiveDuration,
 } from 'discord.js';
 import { limitString } from '../util/strings';
-import { getForumTitle } from '../services/openai.service';
 
 const ACTION_ROW = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
@@ -36,6 +35,14 @@ export async function sendMessageToChannel(
     }
 
     const message = interaction.options.getMessage('message');
+
+    if (!message) {
+        await interaction.reply({
+            content: `Sorry, I couldn't find the message to send to #${channelLabel}.`,
+            ephemeral: true,
+        });
+        return;
+    }
 
     if (message.hasThread) {
         await interaction.reply({
@@ -85,10 +92,8 @@ export async function sendMessageToChannel(
         components: [],
     });
 
-    const title = await getForumTitle(
-        message.content,
-        channelLabel === 'questions'
-    );
+    const title = trimTextForTitle(message.content);
+
     const createdForumPost = await destinationChannel.threads.create({
         name: title,
         message: {
@@ -99,14 +104,13 @@ export async function sendMessageToChannel(
                     timestamp: message.createdAt.toISOString(),
                     author: {
                         name: message.author.tag,
-                        icon_url: message.author.avatarURL(),
+                        icon_url: message.author.avatarURL() ?? undefined,
                     },
                 },
             ],
         },
         reason: `Thread for ${channelLabel}`,
     });
-
 
     const informUserMessage = `Hi there! Your message has been sent to the #${channelLabel} channel. Please continue the conversation there:\n${createdForumPost.url}`;
 
@@ -127,10 +131,17 @@ export async function sendMessageToChannel(
         });
 
         await thread.setLocked(true, `Message sent to #${channelLabel}`);
-    }   
+    }
 
     await interaction.editReply({
         content: `Success! View the post [here](${createdForumPost.url}).`,
         components: [],
     });
+}
+
+function trimTextForTitle(message: string): string {
+    if (message.length <= 100) {
+        return message;
+    }
+    return limitString(message, 97, '...');
 }

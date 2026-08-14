@@ -18,12 +18,6 @@ class BotConfig {
             token: process.env.GITHUB_TOKEN,
         };
     }
-    get openai() {
-        return {
-            enabled: process.env.OPENAI_API_KEY != null,
-            apiKey: process.env.OPENAI_API_KEY,
-        };
-    }
     get firebot() {
         return {
             atProtoFeedApiToken: process.env.ATPROTO_FEED_API_TOKEN,
@@ -51,7 +45,7 @@ class BotConfig {
         ];
 
         return expectedKeys.every((k) => {
-            if (envResult.parsed[k] != null) {
+            if (envResult.parsed?.[k] != null) {
                 return true;
             }
             console.error(`Could not find key ${k} in .env file.`);
