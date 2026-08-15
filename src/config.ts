@@ -28,10 +28,9 @@ class BotConfig {
         const envResult = dotenv.config();
 
         if (envResult.error) {
-            console.error(
-                'Could not find a .env file in root folder of repo. Contact ebiggz to get a copy.'
+            console.warn(
+                'Could not find a .env file in root folder of repo. Attempting to load from default process.env.'
             );
-            return false;
         }
 
         const expectedKeys = [
@@ -45,10 +44,10 @@ class BotConfig {
         ];
 
         return expectedKeys.every((k) => {
-            if (envResult.parsed?.[k] != null) {
+            if (process.env[k] != null) {
                 return true;
             }
-            console.error(`Could not find key ${k} in .env file.`);
+            console.error(`Could not find key ${k} in environment vars.`);
             return false;
         });
     }
