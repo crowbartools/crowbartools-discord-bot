@@ -19,6 +19,7 @@ import { overlayIssues } from './overlay-issues';
 import { debugInfo } from './debug-info';
 import { unsupportedVersion } from './unsupported-version';
 import { supportPolicy } from './support-policy';
+import { supportTimes } from "./support-times";
 
 export const infoTopics: Array<InfoTopic> = [
     authIssues,
@@ -41,4 +42,5 @@ export const infoTopics: Array<InfoTopic> = [
     debugInfo,
     supportPolicy,
     unsupportedVersion,
+    supportTimes
 ];
