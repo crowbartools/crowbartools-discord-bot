@@ -21,6 +21,7 @@ class BotConfig {
     get firebot() {
         return {
             atProtoFeedApiToken: process.env.ATPROTO_FEED_API_TOKEN,
+            statusCheckUrl: process.env.STATUS_CHECK_URL,
         };
     }
 

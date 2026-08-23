@@ -102,4 +102,11 @@ export async function init(): Promise<void> {
     );
 
     discordClient.login(config.discord.token);
+
+    // Periodically check in with the Peekaping status service
+    setInterval(() => {
+        try {
+            void fetch(config.firebot.statusCheckUrl);
+        } catch { }
+    }, 25_000)
 }
