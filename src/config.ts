@@ -20,6 +20,7 @@ class BotConfig {
     }
     get firebot() {
         return {
+            atProtoFeedRootUrl: process.env.ATPROTO_FEED_ROOT_URL,
             atProtoFeedApiToken: process.env.ATPROTO_FEED_API_TOKEN,
             statusCheckUrl: process.env.STATUS_CHECK_URL,
         };

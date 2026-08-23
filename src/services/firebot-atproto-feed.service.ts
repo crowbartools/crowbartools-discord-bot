@@ -6,7 +6,7 @@ export async function removePostFromFeed(
 ): Promise<{ success: boolean; errorMessage?: string }> {
     try {
         const response = await axios.delete(
-            'https://atprotofeed.firebot.app/post',
+            `${config.firebot.atProtoFeedRootUrl}/post`,
             {
                 params: {
                     postUrl,
@@ -39,7 +39,7 @@ export async function addPostToFeed(
 ): Promise<{ success: boolean; errorMessage?: string }> {
     try {
         const response = await axios.post(
-            'https://atprotofeed.firebot.app/post',
+            `${config.firebot.atProtoFeedRootUrl}/post`,
             {},
             {
                 params: {
